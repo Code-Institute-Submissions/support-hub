@@ -31,7 +31,7 @@ load_dotenv(Path.joinpath(BASE_DIR, ".env"))
 SECRET_KEY = environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if environ.get("DEVELOPMENT_ENVIRONMENT"):
+if environ.get("DEV_ENVIRONMENT_DEBUG"):
     DEBUG = True
 else:
     DEBUG = False
@@ -87,7 +87,7 @@ WSGI_APPLICATION = "support_hub.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if environ.get("DEVELOPMENT_ENVIRONMENT"):
+if environ.get("DEV_ENVIRONMENT_DATABASE"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
