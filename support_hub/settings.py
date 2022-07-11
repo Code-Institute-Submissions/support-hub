@@ -36,7 +36,7 @@ if environ.get("DEVELOPMENT_ENVIRONMENT"):
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = environ.get("ALLOWED_HOSTS", "127.0.0.1").split(",")
 
 
 # Application definition
