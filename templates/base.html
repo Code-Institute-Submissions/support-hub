@@ -29,6 +29,15 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <div class="navbar-nav me-auto mb-2 mb-lg-0">
           <a class="nav-item nav-link" href="{% url 'home' %}">Home</a>
+
+          {% if user.is_authenticated %}
+          <span style="right:30px;position:absolute; align-self:center">Logged in as: {{ user.username }}</span>
+          <a class="nav-item nav-link" href="{% url 'account_logout' %}">Logout</a>
+          {% else %}
+          <a class="nav-item nav-link" href="{% url 'account_signup' %}">Register</a>
+          <a class="nav-item nav-link" href="{% url 'account_login' %}">Login</a>
+          {% endif %}
+
         </div>
       </div>
     </div>
