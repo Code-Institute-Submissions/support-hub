@@ -25,6 +25,7 @@ class Ticket(models.Model):
 
     STATUS = Choices(
         ("open", ("Open")),
+        ("inprogress", ("In Progress")),
         ("onhold", ("On Hold")),
         ("closed", ("Closed")),
     )
@@ -48,7 +49,7 @@ class Ticket(models.Model):
     title = models.CharField(max_length=50, unique=False, blank=False)
     description = models.TextField()
     status = models.CharField(
-        max_length=6,
+        max_length=10,
         choices=STATUS,
         default=STATUS.open,
     )
