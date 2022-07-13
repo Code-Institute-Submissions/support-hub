@@ -3,7 +3,7 @@ from django.conf import settings
 from model_utils import Choices
 
 
-# Model to represent Teams users can be assigned to
+# Model to represent the Team tickets and users can be assigned
 class Team(models.Model):
     name = models.CharField(max_length=30, unique=True)
 
@@ -67,7 +67,7 @@ class Ticket(models.Model):
     category = models.ForeignKey(
         TicketCategory,
         on_delete=models.SET_NULL,
-        related_name="category",
+        related_name="ticket_category",
         blank=True,
         null=True,
     )
