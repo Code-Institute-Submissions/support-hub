@@ -4,3 +4,28 @@ body {
   /* Fixed nav padding */
   padding-top: 56px;
 }
+
+/* Ticket List View Template */
+
+.ticket-status {
+  display: inline;
+  padding: 3px;
+  border-radius: 5px;
+  color: white;
+}
+
+.ticket-status-open {
+  background-color: red;
+}
+
+.ticket-status-inprogress {
+  background-color: green;
+}
+
+.ticket-status-onhold {
+  background-color: orange;
+}
+
+.ticket-status-closed {
+  background-color: black;
+}
