@@ -6,6 +6,7 @@ class TicketAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "title",
+        "author",
         "assigned_technician",
         "assigned_team",
         "status",
