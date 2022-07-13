@@ -62,6 +62,29 @@ SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
+# django-allauth Settings
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 900  # 15 minutes in seconds
+LOGIN_URL = "/accounts/login/"
+
+# Email Settings
+# CREDIT: Adapted from djangokatya
+# URL: https://djangokatya.com/2020/08/17/django-allauth-tutorial-part-2-email-confirmation/
+if environ.get("DEV_ENVIRONMENT_EMAIL"):
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_TLS = True
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    DEFAULT_FROM_EMAIL = environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_USER = environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = environ.get("EMAIL_HOST_PASSWORD")
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

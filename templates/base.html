@@ -32,6 +32,7 @@
 
           {% if user.is_authenticated %}
           <span style="right:30px;position:absolute; align-self:center">Logged in as: {{ user.username }}</span>
+          <a class="nav-item nav-link" href="{% url 'account_change_password' %}">Change Password</a>
           <a class="nav-item nav-link" href="{% url 'account_logout' %}">Logout</a>
           {% else %}
           <a class="nav-item nav-link" href="{% url 'account_signup' %}">Register</a>
