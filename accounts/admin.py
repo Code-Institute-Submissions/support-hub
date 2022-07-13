@@ -11,7 +11,10 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     add_form = CustomUserCreationForm
 
-    fieldsets = (*UserAdmin.fieldsets, ("Roles", {"fields": ("role",)}))
+    fieldsets = (
+        *UserAdmin.fieldsets,
+        ("Role and Team", {"fields": ("role", "team")}),
+    )
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
