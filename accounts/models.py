@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from model_utils import Choices
+from tickets.models import Team
 
 
 # Create custom user model by extending AbstractUser
@@ -18,6 +19,12 @@ class CustomUser(AbstractUser):
         max_length=13,
         choices=ROLES,
         default=ROLES.staff,
+    )
+    team = models.ForeignKey(
+        Team,
+        on_delete=models.SET_NULL,
+        related_name="team",
+        null=True,
     )
 
     def __str__(self):

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if tickets %}
+    <div class="container-fluid px-md-5">
+
+      <div>
+    {% for ticket in tickets %}
+    <div class="card w-100 my-3">
+      <div class="card-body">
+        <div class="d-flex flex-row justify-content-between">
+          <span class="card-text">ID: {{ticket.id}}</span>
+          <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
+        </div>
+        <h5 class="card-title mb-2">Title: {{ ticket.title }}</h5>
+        <p class="card-text">Description: {{ ticket.description|truncatechars:30 }}</p>
+        <hr>
+        <p>
+          {% if ticket.assigned_technician %} Assigned to <strong>{{ticket.assigned_technician}}</strong> {% else %}
+          Unassigned {% endif%}
+          {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
+        </p>
+        <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+    {% else %}
+    <div class="container-fluid d-flex py-5 justify-content-center">
+      <div class="p-5 text-center">
+        <p>You have no tickets logged! Would you like to create one?</p>
+        <a class="btn btn-primary" href="#">Submit Request</a>
+      </div>
+    </div>
+    {% endif %}
+
+
+{% endblock %}
