@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Request
+{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container-fluid py-5 d-flex flex-row justify-content-center">
+  <div class="ticket-creation-form-container">
+    <div class="ticket-creation-form-container-header">
+      <h1 class="">Create a new request</h1>
+      <ol class="py-3">
+        <li>Please select a <strong>Type</strong> for your request.</li>
+        <ul><li><strong>Request</strong> - Problem not currently causing downtime.</li>
+        <li><strong>Incident</strong> - Problem causing downtime.</li></ul>
+        <li>Please enter a <strong>title</strong> and <strong>description</strong> for your request.</li>
+        <li>An image or pdf file can be uploaded if required but should be <strong>no bigger than 10MB</strong>.</li>
+      </ol>
+      <form action="" method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {{ form | crispy }}
+
+        <input type="submit" value="Save">
+      </form>
+    </div>
+  </div>
+
+  {% endblock %}
