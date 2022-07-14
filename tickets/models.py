@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from model_utils import Choices
+from cloudinary.models import CloudinaryField
 
 
 # Model to represent the Team tickets and users can be assigned
@@ -48,6 +49,12 @@ class Ticket(models.Model):
     )
     title = models.CharField(max_length=50, unique=False, blank=False)
     description = models.TextField()
+    ticket_image = CloudinaryField(
+        "image",
+        allowed_formats=["jpg", "png", "pdf"],
+        format="jpg",
+        blank=True,
+    )
     status = models.CharField(
         max_length=10,
         choices=STATUS,
