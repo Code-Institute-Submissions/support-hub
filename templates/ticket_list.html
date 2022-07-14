@@ -36,7 +36,7 @@ Tickets
     <div class="container-fluid d-flex py-5 justify-content-center">
       <div class="p-5 text-center">
         <p>You have no tickets logged! Would you like to create one?</p>
-        <a class="btn btn-primary" href="#">Submit Request</a>
+        <a class="btn btn-primary" href="{% url 'ticket_create' %}">Submit Request</a>
       </div>
     </div>
     {% endif %}
