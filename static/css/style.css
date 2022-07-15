@@ -5,7 +5,7 @@ body {
   padding-top: 56px;
 }
 
-/* Ticket Create View Template Styles */
+/* Ticket Create and Update View Template Styles */
 
 form>* {
   margin: 10px 0 10px 0
@@ -13,6 +13,21 @@ form>* {
 
 form>div>label {
   margin-bottom: 3px;
+}
+
+/* Ticket Detail View Template Styles */
+
+.ticket-detail-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: 10px;
+}
+
+.ticket-detail-info {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px
 }
 
 /* Shared Classes */
@@ -48,14 +63,12 @@ form>div>label {
   background-color: black;
 }
 
-.ticket-detail-container {
-  display: flex;
-  flex-direction: column;
-  max-width: 600px;
-  gap: 10px;
-}
+/* Media Queries */
 
 @media screen and (min-width: 1080px) {
+
+  /* Ticket Detail View Template Styles */
+
   .ticket-detail-container {
     display: flex;
     flex-direction: row-reverse;
@@ -63,12 +76,19 @@ form>div>label {
     gap: 10px;
   }
 
-  .ticket-detail-info {
+  .ticket-detail-info-container {
     flex-basis: 25%;
     height: min-content;
+  }
+
+  .ticket-detail-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .ticket-detail-body {
     flex-basis: 75%;
   }
+
 }

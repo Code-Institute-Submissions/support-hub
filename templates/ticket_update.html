@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Request #: {{ ticket.pk }}
+{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container-fluid py-5 d-flex flex-row justify-content-center">
+  <div class="max-w-600 w-100 text-break">
+    <div>
+      <h1 class="mb-4">Edit request #:{{ ticket.pk }}</h1>
+      <h3 class="mb-4">Title: {{ ticket.title }}</h3>
+      <form action="" method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {{ form | crispy }}
+
+        <div class="d-flex flex-row justify-content-end gap-1">
+          <input class="btn btn-primary" type="submit" value="Submit Request">
+          <a class="btn btn-secondary" href="{{ ticket.get_absolute_url }}">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

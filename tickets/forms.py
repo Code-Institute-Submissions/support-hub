@@ -18,3 +18,17 @@ class StaffTicketCreationForm(forms.ModelForm):
         widgets = {
             "description": SummernoteWidget(),
         }
+
+
+# Ticket Update Form for Staff
+class StaffTicketUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = (
+            "description",
+            "ticket_image",
+        )
+
+        widgets = {
+            "description": SummernoteWidget(),
+        }
