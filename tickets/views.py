@@ -30,3 +30,8 @@ class TicketCreateView(generic.CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super(TicketCreateView, self).form_valid(form)
+
+
+class TicketDetailView(generic.DetailView):
+    template_name = "ticket_detail.html"
+    queryset = Ticket.objects.all()
