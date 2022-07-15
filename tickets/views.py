@@ -22,7 +22,6 @@ class TicketCreateView(generic.CreateView):
     queryset = Ticket.objects.all()
     template_name = "ticket_create.html"
     form_class = StaffTicketCreationForm
-    success_url = "/tickets/"
 
     # Add data to form when using CreateView
     # CREDIT: Piyush Maurya - Stack Overflow
