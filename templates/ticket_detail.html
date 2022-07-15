@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+New Request
+{% endblock %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container-fluid py-5 d-flex flex-row justify-content-center">
+  <div class="ticket-detail-container mt-3 w-100">
+
+  <!-- Ticket Information -->
+    <div class="card ticket-detail-info">
+      <div class="card-body">
+        <div class="d-flex flex-row justify-content-between mb-3">
+          <span class="card-text">Request #: {{ticket.id}}</span>
+          <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
+        </div>
+        <p class="card-text">
+          Assignee:
+          {% if ticket.assigned_technician %}
+          <strong>{{ticket.assigned_technician}}</strong>
+          {% else %}
+          Unassigned
+          {% endif%}
+        </p>
+        <p class="card-text">Team:
+          {% if ticket.assigned_team %}
+          <strong>{{ticket.assigned_team}}</strong>
+          {% else %}
+          Unassigned
+          {% endif%}
+        </p>
+        <p class="card-text">Type: {{ ticket.get_type_display }}</p>
+        <p class="card-text">Priority: {{ ticket.get_priority_display }}</p>
+      </div>
+    </div>
+    <!-- Ticket Information End -->
+
+    <!-- Ticket Body -->
+    <div class="card ticket-detail-body">
+      <div class="card-body">
+        <p class="card-text">Raised by: {{ ticket.author }}</p>
+        <p class="card-text">{{ ticket.created_on|date:"M d, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
+        <hr>
+        <h4 class="card-title mb-4">{{ ticket.title }}</h4>
+        <p class="card-text">{{ ticket.description | safe }}</p>
+      </div>
+
+      <div class="card-footer">
+        Attachments:
+        {% if ticket.ticket_image %}
+        <a href="{{ ticket.ticket_image.url }}" target="_blank">Link (opens in a new window)</a>
+        {% else %}
+        None
+        {% endif %}
+      </div>
+    </div>
+    <!-- Ticket Body End -->
+
+  </div>
+</div>
+
+{% endblock %}

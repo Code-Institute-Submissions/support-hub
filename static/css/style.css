@@ -47,3 +47,28 @@ form>div>label {
 .ticket-status-closed {
   background-color: black;
 }
+
+.ticket-detail-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  gap: 10px;
+}
+
+@media screen and (min-width: 1080px) {
+  .ticket-detail-container {
+    display: flex;
+    flex-direction: row-reverse;
+    max-width: 1000px;
+    gap: 10px;
+  }
+
+  .ticket-detail-info {
+    flex-basis: 25%;
+    height: min-content;
+  }
+
+  .ticket-detail-body {
+    flex-basis: 75%;
+  }
+}
