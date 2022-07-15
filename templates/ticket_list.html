@@ -27,14 +27,13 @@ Tickets
         <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
         <hr>
         <div class="d-flex flex-row justify-content-end">
-        <a class="btn btn-primary" href="{{ ticket.get_absolute_url }}">View</a>
-      </div>
+          <a class="btn btn-primary" href="{{ ticket.get_absolute_url }}">View Request</a>
+        </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
-
 {% else %}
 <div class="container-fluid d-flex py-5 justify-content-center">
   <div class="p-5 text-center">
@@ -43,6 +42,5 @@ Tickets
   </div>
 </div>
 {% endif %}
-
 
 {% endblock %}
