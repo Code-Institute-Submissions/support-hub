@@ -5,7 +5,25 @@ body {
   padding-top: 56px;
 }
 
-/* Ticket List View Template */
+/* Ticket Create View Template Styles */
+
+form>* {
+  margin: 10px 0 10px 0
+}
+
+form>div>label {
+  margin-bottom: 3px;
+}
+
+/* Shared Classes */
+
+.max-w-600 {
+  max-width: 600px;
+}
+
+.max-w-1000 {
+  max-width: 1000px;
+}
 
 .ticket-status {
   display: inline;
@@ -28,20 +46,4 @@ body {
 
 .ticket-status-closed {
   background-color: black;
-}
-
-textarea {
-  width: 100%;
-}
-
-form > * {
-  margin: 10px 0 10px 0
-}
-
-form > div > label {
-  margin-bottom: 3px;
-}
-
-.ticket-creation-form-container {
-  max-width: 600px;
 }
