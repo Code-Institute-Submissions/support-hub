@@ -55,9 +55,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "cloudinary",
     "crispy_forms",
+    "django_summernote",
     "accounts",
     "tickets",
 ]
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 SITE_ID = 1
 
@@ -86,6 +89,24 @@ else:
     EMAIL_HOST_USER = environ.get("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = environ.get("EMAIL_HOST_PASSWORD")
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+# Summernote Settings
+# https://github.com/summernote/django-summernote#options
+SUMMERNOTE_CONFIG = {
+    "iframe": False,
+    "summernote": {
+        "width": "100%",
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        "toolbar": [
+            [
+                "font",
+                ["bold", "italic", "underline", "strikethrough", "clear"],
+            ],
+            ["para", ["ul", "ol"]],
+        ],
+    },
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

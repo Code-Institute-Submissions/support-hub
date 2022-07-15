@@ -6,10 +6,10 @@ Tickets
 
 {% block content %}
 
-    {% if tickets %}
-    <div class="container-fluid px-md-5">
+{% if tickets %}
+<div class="container-fluid px-md-5">
 
-      <div>
+  <div>
     {% for ticket in tickets %}
     <div class="card w-100 my-3">
       <div class="card-body">
@@ -18,7 +18,7 @@ Tickets
           <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
         </div>
         <h5 class="card-title mb-2">Title: {{ ticket.title }}</h5>
-        <p class="card-text">Description: {{ ticket.description|truncatechars:30 }}</p>
+        <p class="card-text">Description: {{ ticket.description | safe | truncatechars_html:10 }}</p>
         <hr>
         <p>
           {% if ticket.assigned_technician %} Assigned to <strong>{{ticket.assigned_technician}}</strong> {% else %}
@@ -32,14 +32,14 @@ Tickets
   </div>
 </div>
 
-    {% else %}
-    <div class="container-fluid d-flex py-5 justify-content-center">
-      <div class="p-5 text-center">
-        <p>You have no tickets logged! Would you like to create one?</p>
-        <a class="btn btn-primary" href="{% url 'ticket_create' %}">Submit Request</a>
-      </div>
-    </div>
-    {% endif %}
+{% else %}
+<div class="container-fluid d-flex py-5 justify-content-center">
+  <div class="p-5 text-center">
+    <p>You have no tickets logged! Would you like to create one?</p>
+    <a class="btn btn-primary" href="{% url 'ticket_create' %}">Submit Request</a>
+  </div>
+</div>
+{% endif %}
 
 
 {% endblock %}

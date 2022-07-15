@@ -1,8 +1,9 @@
 from django.contrib import admin
 from .models import Team, TicketCategory, Ticket
+from django_summernote.admin import SummernoteModelAdmin
 
 
-class TicketAdmin(admin.ModelAdmin):
+class TicketAdmin(SummernoteModelAdmin):
     list_display = (
         "id",
         "title",
@@ -11,6 +12,7 @@ class TicketAdmin(admin.ModelAdmin):
         "assigned_team",
         "status",
     )
+    summernote_fields = "description"
 
 
 admin.site.register(Team)
