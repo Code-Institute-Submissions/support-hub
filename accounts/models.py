@@ -25,6 +25,7 @@ class CustomUser(AbstractUser):
         on_delete=models.SET_NULL,
         related_name="team",
         null=True,
+        blank=True,
     )
 
     def __str__(self):
