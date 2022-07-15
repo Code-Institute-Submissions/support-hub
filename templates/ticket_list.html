@@ -16,7 +16,7 @@ Tickets
           <span class="card-text">ID: {{ticket.id}}</span>
           <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
         </div>
-        <h5 class="card-title mb-2">Title: {{ ticket.title }}</h5>
+        <h5 class="card-title mb-2">Title: <a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></h5>
         <p class="card-text">Description: {{ ticket.description | safe | truncatechars_html:80 }}</p>
         <hr>
         <p>
@@ -25,6 +25,10 @@ Tickets
           {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
         </p>
         <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+        <hr>
+        <div class="d-flex flex-row justify-content-end">
+        <a class="btn btn-primary" href="{{ ticket.get_absolute_url }}">View</a>
+      </div>
       </div>
     </div>
     {% endfor %}
