@@ -7,18 +7,17 @@ Tickets
 {% block content %}
 
 {% if tickets %}
-<div class="container-fluid px-md-5">
-
-  <div>
+<div class="container-fluid py-5 d-flex flex-row justify-content-center">
+  <div class="d-flex flex-column mt-3 gap-3 w-100 max-w-1000">
     {% for ticket in tickets %}
-    <div class="card w-100 my-3">
+    <div class="card w-100">
       <div class="card-body">
-        <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row justify-content-between mb-2">
           <span class="card-text">ID: {{ticket.id}}</span>
           <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
         </div>
-        <h5 class="card-title mb-2">Title: {{ ticket.title }}</h5>
-        <p class="card-text">Description: {{ ticket.description | safe | truncatechars_html:10 }}</p>
+        <h5 class="card-title mb-2">Title: <a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></h5>
+        <p class="card-text">Description: {{ ticket.description | safe | truncatechars_html:80 }}</p>
         <hr>
         <p>
           {% if ticket.assigned_technician %} Assigned to <strong>{{ticket.assigned_technician}}</strong> {% else %}
@@ -26,6 +25,10 @@ Tickets
           {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
         </p>
         <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+        <hr>
+        <div class="d-flex flex-row justify-content-end">
+        <a class="btn btn-primary" href="{{ ticket.get_absolute_url }}">View</a>
+      </div>
       </div>
     </div>
     {% endfor %}

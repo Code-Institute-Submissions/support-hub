@@ -5,7 +5,25 @@ body {
   padding-top: 56px;
 }
 
-/* Ticket List View Template */
+/* Ticket Create View Template Styles */
+
+form>* {
+  margin: 10px 0 10px 0
+}
+
+form>div>label {
+  margin-bottom: 3px;
+}
+
+/* Shared Classes */
+
+.max-w-600 {
+  max-width: 600px;
+}
+
+.max-w-1000 {
+  max-width: 1000px;
+}
 
 .ticket-status {
   display: inline;
@@ -30,18 +48,27 @@ body {
   background-color: black;
 }
 
-textarea {
-  width: 100%;
-}
-
-form > * {
-  margin: 10px 0 10px 0
-}
-
-form > div > label {
-  margin-bottom: 3px;
-}
-
-.ticket-creation-form-container {
+.ticket-detail-container {
+  display: flex;
+  flex-direction: column;
   max-width: 600px;
+  gap: 10px;
+}
+
+@media screen and (min-width: 1080px) {
+  .ticket-detail-container {
+    display: flex;
+    flex-direction: row-reverse;
+    max-width: 1000px;
+    gap: 10px;
+  }
+
+  .ticket-detail-info {
+    flex-basis: 25%;
+    height: min-content;
+  }
+
+  .ticket-detail-body {
+    flex-basis: 75%;
+  }
 }

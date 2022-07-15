@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from model_utils import Choices
 from cloudinary.models import CloudinaryField
 
@@ -93,3 +94,13 @@ class Ticket(models.Model):
         blank=True,
         null=True,
     )
+
+    def __str__(self):
+        return f"Request #: {self.id} - {self.title}"
+
+    # CREDIT: CodingEntrepreneurs - Python & Django 3.2 Tutorial Series
+    # Video 44 (get absolute url) & 45 (Django URLs Reverse)
+    # URL: 44 - https://www.youtube.com/watch?v=b42B-xli-vQ
+    # URL: 45 - https://www.youtube.com/watch?v=rm2YTMc2s10
+    def get_absolute_url(self):
+        return reverse("ticket_detail", kwargs={"pk": self.pk})
