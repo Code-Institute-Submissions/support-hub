@@ -19,6 +19,10 @@
 <body class="d-flex flex-column h-100 main-bg">
 
   <!-- Navigation Element -->
+  <!-- Active Navigation -->
+  <!-- CREDIT: Will Howell - Stack Overflow
+  URL: https://stackoverflow.com/a/39644474 -->
+  {% with url_name=request.resolver_match.url_name %}
   <nav id="navigation" class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'home' %}"><span>SUPPORT HUB LOGO</span></a>
@@ -28,23 +32,24 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarText">
         <div class="navbar-nav me-auto mb-2 mb-lg-0">
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home {{url_name}}</a>
+          <a class="nav-item nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
 
           {% if user.is_authenticated %}
           <span style="right:30px;position:absolute; align-self:center">Logged in as: {{ user.username }}</span>
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'ticket_list' %}active{% endif %}" href="{% url 'ticket_list' %}">View Requests</a>
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'ticket_create' %}active{% endif %}" href="{% url 'ticket_create' %}">Submit Request</a>
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'account_change_password' %}active{% endif %}" href="{% url 'account_change_password' %}">Change Password</a>
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'account_logout' %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
+          <a class="nav-item nav-link {% if url_name == 'ticket_list' %}active{% endif %}" href="{% url 'ticket_list' %}">View Requests</a>
+          <a class="nav-item nav-link {% if url_name == 'ticket_create' %}active{% endif %}" href="{% url 'ticket_create' %}">Submit Request</a>
+          <a class="nav-item nav-link {% if url_name == 'account_change_password' %}active{% endif %}" href="{% url 'account_change_password' %}">Change Password</a>
+          <a class="nav-item nav-link {% if url_name == 'account_logout' %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
           {% else %}
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Register</a>
-          <a class="nav-item nav-link {% if request.resolver_match.url_name == 'account_login' %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
+          <a class="nav-item nav-link {% if url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Register</a>
+          <a class="nav-item nav-link {% if url_name == 'account_login' %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
           {% endif %}
 
         </div>
       </div>
     </div>
   </nav>
+  {% endwith %}
   <!-- Navigation End -->
 
   <!-- Main Start -->

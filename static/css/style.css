@@ -29,6 +29,13 @@ form>div>label {
   flex-direction: column-reverse;
   gap: 10px
 }
+.ticket-detail-body-container {
+  gap: 30px
+}
+
+.comments hr:last-of-type {
+  display: none;
+}
 
 /* Shared Classes */
 
@@ -87,8 +94,11 @@ form>div>label {
     gap: 10px;
   }
 
-  .ticket-detail-body {
+  .ticket-detail-body-container {
+    word-wrap: break-all;
+    gap: 30px;
     flex-basis: 75%;
+    max-width: 75%;
   }
 
 }

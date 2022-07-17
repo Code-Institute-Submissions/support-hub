@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ticket
+from .models import Ticket, Note
 from django_summernote.fields import SummernoteWidget
 
 
@@ -31,4 +31,15 @@ class StaffTicketUpdateForm(forms.ModelForm):
 
         widgets = {
             "description": SummernoteWidget(),
+        }
+
+
+# Note Form for use in Ticket View
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ("body",)
+
+        widgets = {
+            "body": SummernoteWidget(),
         }

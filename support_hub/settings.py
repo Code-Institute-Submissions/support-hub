@@ -93,7 +93,6 @@ else:
 # Summernote Settings
 # https://github.com/summernote/django-summernote#options
 SUMMERNOTE_CONFIG = {
-    "iframe": False,
     "summernote": {
         "width": "100%",
         # Toolbar customization

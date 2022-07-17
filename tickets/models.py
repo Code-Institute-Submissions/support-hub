@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.utils.html import strip_tags
 from model_utils import Choices
 from cloudinary.models import CloudinaryField
 
@@ -104,3 +105,24 @@ class Ticket(models.Model):
     # URL: 45 - https://www.youtube.com/watch?v=rm2YTMc2s10
     def get_absolute_url(self):
         return reverse("ticket_detail", kwargs={"pk": self.pk})
+
+
+class Note(models.Model):
+    ticket = models.ForeignKey(
+        Ticket, on_delete=models.CASCADE, related_name="notes"
+    )
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="note_author",
+        null=True,
+    )
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    # Remove HTML tags in for note body. For use in the admin panel
+    # CREDIT: arie - Stack Overflow
+    # URL: https://stackoverflow.com/a/9294835
+    @property
+    def body_without_tags(self):
+        return strip_tags(self.body)
