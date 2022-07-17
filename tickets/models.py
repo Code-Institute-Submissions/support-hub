@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.utils.html import strip_tags
 from model_utils import Choices
 from cloudinary.models import CloudinaryField
 
@@ -118,3 +119,10 @@ class Note(models.Model):
     )
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+
+    # Remove HTML tags in for note body. For use in the admin panel
+    # CREDIT: arie - Stack Overflow
+    # URL: https://stackoverflow.com/a/9294835
+    @property
+    def body_without_tags(self):
+        return strip_tags(self.body)
