@@ -20,7 +20,7 @@ class NoteAdmin(SummernoteModelAdmin):
         "id",
         "author",
         "ticket",
-        "body",
+        "body_without_tags",
     )
     summernote_fields = "body"
 
