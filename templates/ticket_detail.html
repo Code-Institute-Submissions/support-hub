@@ -47,26 +47,69 @@
     </div>
     <!-- Ticket Information End -->
 
-    <!-- Ticket Body -->
-    <div class="card ticket-detail-body">
-      <div class="card-body">
-        <p class="card-text">Raised by: {{ ticket.author }}</p>
-        <p class="card-text">{{ ticket.created_on|date:"M d, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
-        <hr>
-        <h4 class="card-title mb-4">{{ ticket.title }}</h4>
-        <p class="card-text">{{ ticket.description | safe }}</p>
-      </div>
+    <!-- Ticket Body and Comments Container -->
+    <div class="d-flex flex-column ticket-detail-body-container">
 
-      <div class="card-footer">
-        Attachments:
-        {% if ticket.ticket_image %}
-        <a href="{{ ticket.ticket_image.url }}" target="_blank">Link (opens in a new window)</a>
-        {% else %}
-        None
-        {% endif %}
+      <!-- Ticket Body -->
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">Raised by: {{ ticket.author }}</p>
+          <p class="card-text">{{ ticket.created_on|date:"M d, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
+          <hr>
+          <h4 class="card-title mb-4">{{ ticket.title }}</h4>
+          <p class="card-text">{{ ticket.description | safe }}</p>
+        </div>
+
+        <div class="card-footer">
+          Attachments:
+          {% if ticket.ticket_image %}
+          <a href="{{ ticket.ticket_image.url }}" target="_blank">Link (opens in a new window)</a>
+          {% else %}
+          None
+          {% endif %}
+        </div>
       </div>
+      <!-- Ticket Body End -->
+
+      <!-- Comments -->
+      <div class="card comments">
+        <div class="card-header">
+          Comments:
+        </div>
+        <div class="card-body">
+          {% if not ticket.notes.all %}
+          No notes yet...
+          {% else %}
+          {% for note in ticket.notes.all %}
+          <strong>
+            {% if note.author.username %}
+            {{ note.author.username }}
+            {% else %}
+            Unregistered
+            {% endif %}
+          </strong>
+          - {{ note.created_on|date:"M d, Y" }} at {{ note.created_on|date:"H:i" }}
+          <br><br>
+          {{ note.body | safe }}
+          <hr>
+          {% endfor %}
+          {% endif%}
+        </div>
+      </div>
+      <form style="height: 500px" action="" method="POST">
+
+        {% csrf_token %}
+        {{ form | crispy }}
+
+        <div class="d-flex flex-row justify-content-end gap-1">
+          <input class="btn btn-primary" type="submit" value="Submit Note">
+        </div>
+      </form>
+      <!-- Comments End -->
+
     </div>
-    <!-- Ticket Body End -->
+    <!-- Ticket Body and Comments Container End -->
+
   </div>
 </div>
 
