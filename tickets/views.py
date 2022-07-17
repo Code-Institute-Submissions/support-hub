@@ -4,7 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from .models import Ticket, Note
-from .forms import StaffTicketCreationForm, StaffTicketUpdateForm, NoteForm
+from .forms import (
+    StaffTicketCreationForm,
+    StaffTicketUpdateForm,
+    ElevatedUserTicketForm,
+    NoteForm,
+)
 
 
 # Create listview to retrieve a list of tickets from the database
@@ -23,13 +28,31 @@ class TicketListView(generic.ListView):
 class TicketCreateView(generic.CreateView):
     queryset = Ticket.objects.all()
     template_name = "ticket_create.html"
-    form_class = StaffTicketCreationForm
+
+    # Present different forms base on user roles
+    def get_form_class(self):
+        if (self.request.user.role == "administrator") or (
+            self.request.user.role == "technician"
+        ):
+            form = ElevatedUserTicketForm
+        else:
+            form = StaffTicketCreationForm
+        return form
+
+    # Populate the author form field when form used in view is loaded
+    def get_initial(self):
+        return {
+            "author": self.request.user,
+        }
 
     # Add data to form when using CreateView
     # CREDIT: Piyush Maurya - Stack Overflow
     # URL: https://stackoverflow.com/a/45221181
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        # If the user has staff role, this forces the author to be set as
+        # themselves whereas elevated staff can set another user as the author
+        if self.request.user.role == "staff":
+            form.instance.author = self.request.user
         return super(TicketCreateView, self).form_valid(form)
 
 
@@ -105,7 +128,16 @@ class TicketUpdateView(
 ):
     queryset = Ticket.objects.all()
     template_name = "ticket_update.html"
-    form_class = StaffTicketUpdateForm
+
+    # Present different forms base on user roles
+    def get_form_class(self):
+        if (self.request.user.role == "administrator") or (
+            self.request.user.role == "technician"
+        ):
+            form = ElevatedUserTicketForm
+        else:
+            form = StaffTicketCreationForm
+        return form
 
     def test_func(self):
         logged_in_user = self.request.user
