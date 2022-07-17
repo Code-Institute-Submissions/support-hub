@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.views import generic
+from django.views import generic, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.conf import settings
-from .models import Ticket
-from .forms import StaffTicketCreationForm, StaffTicketUpdateForm
+from django.views.generic.detail import SingleObjectMixin
+from django.urls import reverse
+from .models import Ticket, Note
+from .forms import StaffTicketCreationForm, StaffTicketUpdateForm, NoteForm
 
 
 # Create listview to retrieve a list of tickets from the database
@@ -32,11 +33,19 @@ class TicketCreateView(generic.CreateView):
         return super(TicketCreateView, self).form_valid(form)
 
 
+# Ticket DetailView to display individual tickets with comment form
+# CREDIT: Adapted from Django Documentation
+# URL: https://docs.djangoproject.com/en/4.0/topics/class-based-views/mixins/#an-alternative-better-solution
 class TicketDetailView(
     LoginRequiredMixin, UserPassesTestMixin, generic.DetailView
 ):
     template_name = "ticket_detail.html"
-    queryset = Ticket.objects.all()
+    model = Ticket
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = NoteForm()
+        return context
 
     # Test to check the currently logged on user is the author of the ticket or
     # has the elevated permissions required to view any ticket.
@@ -52,6 +61,43 @@ class TicketDetailView(
             return True
         else:
             return False
+
+
+# Note FormView to handle form validation and post requests
+# CREDIT: Adapted from Django Documentation
+# URL: https://docs.djangoproject.com/en/4.0/topics/class-based-views/mixins/#an-alternative-better-solution
+class NoteFormView(SingleObjectMixin, generic.FormView):
+    template_name = "ticket_detail.html"
+    form_class = NoteForm
+    model = Ticket
+
+    def form_valid(self, form):
+        form = self.get_form()
+        note = form.save(commit=False)
+        note.ticket = self.object
+        note.author = self.request.user
+        note.save()
+        return super().form_valid(note)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse("ticket_detail", kwargs={"pk": self.object.pk})
+
+
+# Ticket View to determine which view to get based on the request type
+# CREDIT: Adapted from Django Documentation
+# URL: https://docs.djangoproject.com/en/4.0/topics/class-based-views/mixins/#an-alternative-better-solution
+class TicketView(View):
+    def get(self, request, *args, **kwargs):
+        view = TicketDetailView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = NoteFormView.as_view()
+        return view(request, *args, **kwargs)
 
 
 class TicketUpdateView(
