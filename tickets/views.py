@@ -136,7 +136,7 @@ class TicketUpdateView(
         ):
             form = ElevatedUserTicketForm
         else:
-            form = StaffTicketCreationForm
+            form = StaffTicketUpdateForm
         return form
 
     def test_func(self):

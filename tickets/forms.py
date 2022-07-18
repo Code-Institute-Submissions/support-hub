@@ -77,8 +77,7 @@ class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
         "priority",
         "assigned_team",
         "assigned_technician",
-        StaffTicketCreationForm.Meta.fields,
-    ]
+    ] + StaffTicketCreationForm.field_order
 
 
 # Note Form for use in Ticket View
