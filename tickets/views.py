@@ -178,6 +178,10 @@ class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
             )
             return redirect("ticket_detail", pk=kwargs["pk"])
         else:
+            messages.info(
+                request,
+                f"Request #{kwargs['pk']} deleted successfully.",
+            )
             return super(TicketDeleteView, self).delete(
                 request, *args, **kwargs
             )
