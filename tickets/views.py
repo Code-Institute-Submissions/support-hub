@@ -3,6 +3,7 @@ from django.views import generic, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
+from django.http import Http404
 from .models import Ticket, Note
 from .forms import (
     StaffTicketCreationForm,
@@ -155,6 +156,10 @@ class TicketUpdateView(
 
 class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Ticket
+
+    # Override get method to raise 404 error if url entered manually
+    def get(self, request, *args, **kwargs):
+        raise Http404
 
     def get_success_url(self):
         return reverse("ticket_list")
