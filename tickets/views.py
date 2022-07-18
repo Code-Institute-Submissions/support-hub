@@ -151,3 +151,10 @@ class TicketUpdateView(
             return True
         else:
             return False
+
+
+class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Ticket
+
+    def get_success_url(self):
+        return reverse("ticket_list")
