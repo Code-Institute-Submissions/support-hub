@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views import generic, View
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
+from django.http import Http404
 from .models import Ticket, Note
 from .forms import (
     StaffTicketCreationForm,
@@ -136,7 +138,7 @@ class TicketUpdateView(
         ):
             form = ElevatedUserTicketForm
         else:
-            form = StaffTicketCreationForm
+            form = StaffTicketUpdateForm
         return form
 
     def test_func(self):
@@ -151,3 +153,38 @@ class TicketUpdateView(
             return True
         else:
             return False
+
+
+class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Ticket
+
+    # Override get method to raise 404 error if url entered manually
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+    # Overwrite delete method to prevent users with non-elevated roles deleting
+    # records.
+    #
+    # The delete button visibility is controlled using the template. This
+    # method prevents unauthorized users deleting records, in the event the
+    # button is accidentally made visible during design changes.
+    def delete(self, request, *args, **kwargs):
+        logged_in_user = self.request.user
+        if logged_in_user.role == "staff":
+            # Redirect user back to ticket detail url with message
+            messages.error(
+                request,
+                "You do not have permission to delete this request.",
+            )
+            return redirect("ticket_detail", pk=kwargs["pk"])
+        else:
+            messages.info(
+                request,
+                f"Request #{kwargs['pk']} deleted successfully.",
+            )
+            return super(TicketDeleteView, self).delete(
+                request, *args, **kwargs
+            )
+
+    def get_success_url(self):
+        return reverse("ticket_list")

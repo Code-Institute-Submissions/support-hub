@@ -95,6 +95,7 @@ else:
 SUMMERNOTE_CONFIG = {
     "summernote": {
         "width": "100%",
+        "height": "400px",
         # Toolbar customization
         # https://summernote.org/deep-dive/#custom-toolbar-popover
         "toolbar": [
@@ -106,6 +107,8 @@ SUMMERNOTE_CONFIG = {
         ],
     },
 }
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
