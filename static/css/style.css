@@ -38,6 +38,10 @@ form>div>label {
   display: none;
 }
 
+.toast-container {
+  z-index: 100;
+}
+
 /* Shared Classes */
 
 .max-w-600 {
