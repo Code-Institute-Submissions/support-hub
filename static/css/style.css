@@ -29,6 +29,7 @@ form>div>label {
   flex-direction: column-reverse;
   gap: 10px
 }
+
 .ticket-detail-body-container {
   gap: 30px
 }
@@ -49,7 +50,7 @@ form>div>label {
 
 .ticket-status {
   display: inline;
-  padding: 3px;
+  padding: 3px 8px 3px 8px;
   border-radius: 5px;
   color: white;
 }
@@ -80,7 +81,7 @@ form>div>label {
     display: flex;
     flex-direction: row-reverse;
     max-width: 1000px;
-    gap: 10px;
+    gap: 20px;
   }
 
   .ticket-detail-info-container {
@@ -91,11 +92,10 @@ form>div>label {
   .ticket-detail-info {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 30px;
   }
 
   .ticket-detail-body-container {
-    word-wrap: break-all;
     gap: 30px;
     flex-basis: 75%;
     max-width: 75%;
