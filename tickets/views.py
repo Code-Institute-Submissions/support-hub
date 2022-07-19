@@ -6,6 +6,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.http import Http404
 from .models import Ticket, Note
+from .filters import StaffTicketFilter, ElevatedUserTicketFilter
 from .forms import (
     StaffTicketCreationForm,
     StaffTicketUpdateForm,
@@ -32,6 +33,28 @@ class TicketListView(generic.ListView):
         else:
             queryset = Ticket.objects.filter(author=self.request.user)
         return queryset
+
+    # Override get_context_data to add the filter to the context
+    #
+    # CREDIT: Filtering adapted from The Dumbfounds: Django Filtering System with
+    #         django-filter
+    # URL:    https://www.youtube.com/watch?v=nle3u6Ww6Xk
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Present different filter based on user role
+        if (self.request.user.role == "administrator") or (
+            self.request.user.role == "technician"
+        ):
+            context["filter"] = ElevatedUserTicketFilter(
+                self.request.GET,
+                user=self.request.user,
+                queryset=self.get_queryset(),
+            )
+        else:
+            context["filter"] = StaffTicketFilter(
+                self.request.GET, queryset=self.get_queryset()
+            )
+        return context
 
 
 # CreateView to facilitate the creation of tickets

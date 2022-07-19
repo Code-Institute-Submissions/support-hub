@@ -6,6 +6,8 @@ Tickets
 
 {% block content %}
 
+{% load crispy_forms_tags %}
+
 <!-- Messages Start -->
 {% if messages %}
 <div aria-live="polite" aria-atomic="true" class="position-relative">
@@ -31,7 +33,30 @@ Tickets
 {% if tickets %}
 <div class="container-fluid py-5 d-flex flex-row justify-content-center">
   <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-1000">
-    {% for ticket in tickets %}
+
+    <!-- Filter Start -->
+    <div class="d-flex flex-row justify-content-end">
+      <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Filter and Sort
+        Options</button>
+    </div>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasWithBothOptions"
+      aria-labelledby="offcanvasWithBothOptionsLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Ticket Filter and Sort Options</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <form class="" action="" method="get">
+          {{ filter.form | crispy}}
+          <button class="btn btn-primary" type="submit">Search</button>
+          <a class="btn btn-secondary" href="{% url 'ticket_list' %}">Clear filters</a>
+        </form>
+      </div>
+    </div>
+    <!-- Filter End -->
+    {% if tickets and filter.qs %}
+    {% for ticket in filter.qs %}
     <div class="card w-100">
       <div class="card-body">
         <div class="d-flex flex-row justify-content-between mb-2">
@@ -42,23 +67,30 @@ Tickets
         <p class="card-text">Description: {{ ticket.description | safe | truncatechars_html:80 }}</p>
         <hr>
         <div class="d-flex flex-row justify-content-between">
-        <div>
-          <p>
-            {% if ticket.assigned_technician %} Assigned to <strong>{{ticket.assigned_technician}}</strong> {% else %}
-            Unassigned {% endif%}
-            {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
-          </p>
-          <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+          <div>
+            <p>
+              {% if ticket.assigned_technician %} Assigned to <strong>{{ticket.assigned_technician}}</strong> {% else %}
+              Unassigned {% endif%}
+              {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
+            </p>
+            <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+          </div>
+          <div class="d-flex flex-column justify-content-end">
+            <a class="btn btn-outline-primary" href="{{ ticket.get_absolute_url }}">View Request</a>
+          </div>
         </div>
-        <div class="d-flex flex-column justify-content-end">
-          <a class="btn btn-outline-primary" href="{{ ticket.get_absolute_url }}">View Request</a>
-        </div>
-      </div>
       </div>
     </div>
     {% endfor %}
   </div>
 </div>
+{% else %}
+<div class="container-fluid d-flex py-5 justify-content-center">
+  <div class="p-5 text-center">
+    <p>No tickets match your filter criteria.</p>
+  </div>
+</div>
+{% endif %}
 {% else %}
 <div class="container-fluid d-flex py-5 justify-content-center">
   <div class="p-5 text-center">
