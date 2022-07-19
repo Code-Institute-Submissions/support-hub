@@ -19,10 +19,18 @@ class TicketListView(generic.ListView):
     template_name = "ticket_list.html"
     context_object_name = "tickets"
 
-    # Restrict the queryset to only tickets where the logged on user is th
-    # author
+    # Present different queryset based on user role
+    #
+    # This allows elevated users to see all requests where non-elevated users
+    # see only tickets they have authored
     def get_queryset(self):
-        queryset = Ticket.objects.filter(author=self.request.user)
+        self.request.user
+        if (self.request.user.role == "administrator") or (
+            self.request.user.role == "technician"
+        ):
+            queryset = Ticket.objects.all()
+        else:
+            queryset = Ticket.objects.filter(author=self.request.user)
         return queryset
 
 
