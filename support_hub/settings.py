@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "django_summernote",
     "accounts",
     "tickets",
+    "django_filters",
 ]
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
