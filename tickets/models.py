@@ -96,6 +96,9 @@ class Ticket(models.Model):
         null=True,
     )
 
+    class Meta:
+        ordering = ("-updated_on",)
+
     def __str__(self):
         return f"Request #: {self.id} - {self.title}"
 
