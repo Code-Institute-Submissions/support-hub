@@ -46,7 +46,9 @@ class TicketListView(generic.ListView):
             self.request.user.role == "technician"
         ):
             context["filter"] = ElevatedUserTicketFilter(
-                self.request.GET, queryset=self.get_queryset()
+                self.request.GET,
+                user=self.request.user,
+                queryset=self.get_queryset(),
             )
         else:
             context["filter"] = StaffTicketFilter(

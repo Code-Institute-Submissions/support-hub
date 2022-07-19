@@ -68,13 +68,55 @@ class StaffTicketFilter(django_filters.FilterSet):
 
 class ElevatedUserTicketFilter(StaffTicketFilter, django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
+        # CREDIT: TS Jee and nishant - Stack Overflow
+        # REASON: Pass request.user from ListView
+        # URL: https://stackoverflow.com/questions/54069084/passing-request-user-to-a-queryset-in-modelchoicefilter
+        self.user = kwargs.pop("user")
         super(StaffTicketFilter, self).__init__(*args, **kwargs)
+
+    ASSIGNEE_CHOICES = (("me", "Me"), ("all", "All"))
+
+    author__username = django_filters.CharFilter(
+        lookup_expr="icontains", label="Requestor Username"
+    )
+
+    assigned_technician__username = django_filters.CharFilter(
+        lookup_expr="icontains", label="Assigned Technician Username"
+    )
+
+    title = django_filters.CharFilter(
+        lookup_expr="icontains", label="Request Title Contains"
+    )
+
+    description = django_filters.CharFilter(
+        lookup_expr="icontains", label="Request Description Contains"
+    )
+
+    def get_queryset_assignee(self, queryset, name, value):
+        if value == "me":
+            return queryset.filter(assigned_technician=self.user)
+        else:
+            return queryset.all()
+
+    filter_by_assignee = django_filters.ChoiceFilter(
+        label="Assigned to",
+        choices=ASSIGNEE_CHOICES,
+        method="get_queryset_assignee",
+    )
 
     class Meta:
         model = Ticket
-        fields = StaffTicketFilter.Meta.fields + (
-            "priority",
-            "assigned_team",
-            "category",
-            "type",
+        fields = (
+            ("filter_by_assignee",)
+            + StaffTicketFilter.Meta.fields
+            + (
+                "author__username",
+                "assigned_technician__username",
+                "priority",
+                "assigned_team",
+                "category",
+                "type",
+                "title",
+                "description",
+            )
         )
