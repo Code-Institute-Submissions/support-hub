@@ -76,6 +76,11 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 900  # 15 minutes in seconds
 LOGIN_URL = "/accounts/login/"
 
+# Custom Account Signup Form
+ACCOUNT_FORMS = {
+    "signup": "accounts.forms.CustomSignupForm",
+}
+
 # Email Settings
 # CREDIT: Adapted from djangokatya
 # URL: https://djangokatya.com/2020/08/17/django-allauth-tutorial-part-2-email-confirmation/
