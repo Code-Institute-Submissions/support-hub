@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from model_utils import Choices
 from cloudinary.models import CloudinaryField
+from datetime import datetime, timezone
 
 
 # Model to represent the Team tickets and users can be assigned
@@ -108,6 +109,18 @@ class Ticket(models.Model):
     # URL: 45 - https://www.youtube.com/watch?v=rm2YTMc2s10
     def get_absolute_url(self):
         return reverse("ticket_detail", kwargs={"pk": self.pk})
+
+    # Property of the ticket model to be used in the template and to set the
+    # tickets updated time
+    @property
+    def get_time_now(self):
+        return datetime.now(timezone.utc)
+
+    # Function to set the tickets updated_on field to the current time when
+    # called
+    def set_ticket_updated_now(self):
+        self.updated_on = self.get_time_now
+        self.save(update_fields=["updated_on"])
 
 
 class Note(models.Model):
