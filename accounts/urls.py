@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import demo_home_page_view, ProfileDetailView
+from .views import demo_home_page_view, ProfileDetailView, ProfileUpdateView
 
 
 urlpatterns = [
@@ -8,5 +8,10 @@ urlpatterns = [
         "accounts/<slug:pk>/",
         ProfileDetailView.as_view(),
         name="profile_detail",
+    ),
+    path(
+        "accounts/<slug:pk>/edit",
+        ProfileUpdateView.as_view(),
+        name="profile_update",
     ),
 ]
