@@ -133,6 +133,12 @@ class NoteFormView(SingleObjectMixin, generic.FormView):
         note.ticket = self.object
         note.author = self.request.user
         note.save()
+
+        # Get the current ticket and call the model function to set its
+        # updated_on field to the current time
+        ticket = Ticket.objects.get(pk=self.object.pk)
+        ticket.set_ticket_updated_now()
+
         return super().form_valid(note)
 
     def post(self, request, *args, **kwargs):
