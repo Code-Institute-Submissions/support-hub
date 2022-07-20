@@ -44,6 +44,9 @@
             <p>Status: <span
                 class="card-text ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
             </p>
+            <p class="card-text">Type: {{ ticket.get_type_display }}</p>
+            <p class="card-text">Category: {{ ticket.category }}</p>
+            <p class="card-text">Priority: {{ ticket.get_priority_display }}</p>
             <p class="card-text">
               Assignee:
               {% if ticket.assigned_technician %}
@@ -59,8 +62,6 @@
               Unassigned
               {% endif%}
             </p>
-            <p class="card-text">Type: {{ ticket.get_type_display }}</p>
-            <p class="card-text">Priority: {{ ticket.get_priority_display }}</p>
           </div>
         </div>
         <div class="card">
@@ -95,7 +96,15 @@
         </div>
         <div class="card-body">
           <p class="card-text">Raised by: {{ ticket.author }}</p>
-          <p class="card-text">{{ ticket.created_on|date:"M d, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
+          <p class="card-text">Created on: {{ ticket.created_on|date:"dS F, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
+          <p class="card-text">
+            Last update:
+            {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
+            -
+            {% else %}
+            {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
+            {% endif %}
+          </p>
           <hr>
           <h4 class="card-title mb-4">{{ ticket.title }}</h4>
           <p class="card-text">{{ ticket.description | safe }}</p>

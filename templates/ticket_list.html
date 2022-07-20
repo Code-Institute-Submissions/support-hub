@@ -74,6 +74,14 @@ Tickets
               {% if ticket.assigned_team %} in <strong>{{ticket.assigned_team}}</strong> {% else %} {% endif%}
             </p>
             <p class="card-text text-muted">Created on: {{ticket.created_on}}</p>
+            <p class="card-text text-muted">
+              Last update:
+              {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
+              -
+              {% else %}
+              {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
+              {% endif %}
+            </p>
           </div>
           <div class="d-flex flex-column justify-content-end">
             <a class="btn btn-outline-primary" href="{{ ticket.get_absolute_url }}">View Request</a>
