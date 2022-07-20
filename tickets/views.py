@@ -16,7 +16,7 @@ from .forms import (
 
 
 # Create listview to retrieve a list of tickets from the database
-class TicketListView(generic.ListView):
+class TicketListView(LoginRequiredMixin, generic.ListView):
     template_name = "ticket_list.html"
     context_object_name = "tickets"
 
@@ -58,8 +58,8 @@ class TicketListView(generic.ListView):
 
 
 # CreateView to facilitate the creation of tickets
-class TicketCreateView(generic.CreateView):
-    queryset = Ticket.objects.all()
+class TicketCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Ticket
     template_name = "ticket_create.html"
 
     # Present different forms base on user roles
