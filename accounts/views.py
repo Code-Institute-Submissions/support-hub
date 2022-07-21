@@ -67,7 +67,19 @@ class ProfileUpdateView(
             return False
 
 
-class ProfileListView(generic.ListView):
+class ProfileListView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.ListView
+):
     model = CustomUser
     template_name = "profile_list.html"
     context_object_name = "profiles"
+
+    # Test function to ensure only a user with the administrator role can view
+    # the profile list
+    def test_func(self):
+        logged_in_user = self.request.user
+
+        if logged_in_user.role == "administrator":
+            return True
+        else:
+            return False
