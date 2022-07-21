@@ -3,6 +3,7 @@ from django.views import generic
 from .models import CustomUser
 from .forms import ProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create demo home page view to be used for initial testing of authentication
 def demo_home_page_view(request):
@@ -25,11 +26,15 @@ class ProfileDetailView(
 
 
 class ProfileUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    SuccessMessageMixin,
+    generic.UpdateView,
 ):
     model = CustomUser
     template_name = "profile_update.html"
     form_class = ProfileUpdateForm
+    success_message = "Profile Changes Saved!"
 
     # Test function to ensure the logged in user can edit only their own
     # profile
