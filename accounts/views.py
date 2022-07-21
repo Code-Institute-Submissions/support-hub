@@ -83,3 +83,12 @@ class ProfileListView(
             return True
         else:
             return False
+
+    # Queryset based on form input
+    # CREDIT: Willem Van Onsem and Abu Yunus - Stack Overflow
+    # URL: https://stackoverflow.com/questions/63935852
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        username = self.request.GET.get("username")
+        if username:
+            return queryset.filter(username__icontains=username)
