@@ -53,6 +53,28 @@
   {% endwith %}
   <!-- Navigation End -->
 
+  <!-- Messages Start -->
+  {% if messages %}
+  <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <div class="toast-container position-absolute top-0 end-0 p-3">
+      {% for message in messages %}
+      <div class="toast" {% if messaage.tags == 'error' %} role="alert" aria-live="assertive" {% else %} role="status"
+        aria-live="polite" {% endif %} aria-atomic="true">
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded me-2" alt="..."> -->
+          <strong class="me-auto text-capitalize">{{ message.tags }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+<!-- Messages End -->
+
   <!-- Main Start -->
   <main>
     {% block content %}
