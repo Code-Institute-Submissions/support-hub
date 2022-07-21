@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import CustomUser
-from .forms import ProfileUpdateForm
+from .forms import ProfileUpdateForm, AdminProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -17,12 +17,20 @@ class ProfileDetailView(
     template_name = "profile_detail.html"
     context_object_name = "profile"
 
-    # Test function to ensure the logged in user can see only their own profile
+    # Test function to ensure the logged in user can only see their own
+    # profile, unless their role is administrator in which case they can see
+    # all profiles
     def test_func(self):
         logged_in_user = self.request.user
         current_profile = self.get_object()
 
-        return True if current_profile == logged_in_user else False
+        if (
+            current_profile == logged_in_user
+            or logged_in_user.role == "administrator"
+        ):
+            return True
+        else:
+            return False
 
 
 class ProfileUpdateView(
@@ -36,10 +44,24 @@ class ProfileUpdateView(
     form_class = ProfileUpdateForm
     success_message = "Profile Changes Saved!"
 
-    # Test function to ensure the logged in user can edit only their own
-    # profile
+    def get_form_class(self):
+        if self.request.user.role == "administrator":
+            form = AdminProfileUpdateForm
+        else:
+            form = ProfileUpdateForm
+        return form
+
+    # Test function to ensure the logged in user can only edit their own
+    # profile, unless their role is administrator in which case they can edit
+    # all profiles
     def test_func(self):
         logged_in_user = self.request.user
         current_profile = self.get_object()
 
-        return True if current_profile == logged_in_user else False
+        if (
+            current_profile == logged_in_user
+            or logged_in_user.role == "administrator"
+        ):
+            return True
+        else:
+            return False
