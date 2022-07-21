@@ -29,6 +29,14 @@ class CustomSignupForm(SignupForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
+    # Set first and last name as required fields for the update form
+    # CREDIT: andreaspelme - Stack Overflow
+    # URL: https://stackoverflow.com/a/7683392
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["first_name"].required = True
+        self.fields["last_name"].required = True
+
     class Meta:
         model = CustomUser
         fields = (
