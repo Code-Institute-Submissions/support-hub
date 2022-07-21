@@ -13,18 +13,22 @@ Profile - {{ profile.username }}
         Profile
       </div>
       <div class="card-body">
-        <p>Username: {{ profile.username }}</p>
+        <p>Username: {{ user.username }}</p>
         <p>
           Full Name: 
-          {% if profile.first_name or profile.last_name %}
-          {{ profile.full_name }}
+          {% if user.first_name or user.last_name %}
+          {{ user.full_name }}
           {% else %}
           No name provided
           {% endif %}
         </p>
-        <p>{{ profile.email }} <a href="{% url 'account_email' %}">edit email address</a></p>
+        <p>Email address: {{ user.email }} <a href="{% url 'account_email' %}">edit email address</a></p>
+        {% if user.role == 'technician' or user.role == 'administrator' %}
+        <p>Team: {{ user.team }}</p>
+        <p>Role: {{ user.role }}</p>
+        {% endif %}
         <div class="d-flex flex-row justify-content-end gap-1">
-          <a href="{% url 'profile_update' profile.id %}" class="btn btn-primary">Edit Profile</a>
+          <a href="{% url 'profile_update' user.id %}" class="btn btn-primary">Edit Profile</a>
         <a class="btn btn-outline-secondary" href="{% url 'account_change_password' %}">Change Password</a>
       </div>
       </div>
