@@ -65,3 +65,9 @@ class ProfileUpdateView(
             return True
         else:
             return False
+
+
+class ProfileListView(generic.ListView):
+    model = CustomUser
+    template_name = "profile_list.html"
+    context_object_name = "profiles"
