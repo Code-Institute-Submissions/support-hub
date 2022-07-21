@@ -44,3 +44,15 @@ class ProfileUpdateForm(forms.ModelForm):
             "last_name",
             "username",
         )
+
+
+class AdminProfileUpdateForm(ProfileUpdateForm):
+    def __init__(self, *args, **kwargs):
+        super(AdminProfileUpdateForm, self).__init__(*args, **kwargs)
+
+    class Meta(ProfileUpdateForm):
+        model = CustomUser
+        fields = ProfileUpdateForm.Meta.fields + (
+            "role",
+            "team",
+        )
