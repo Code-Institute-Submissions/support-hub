@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 from .models import CustomUser
-from .forms import ProfileUpdateForm
+from .forms import ProfileUpdateForm, AdminProfileUpdateForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -15,14 +15,22 @@ class ProfileDetailView(
 ):
     model = CustomUser
     template_name = "profile_detail.html"
-    context_object_name = "profile"
+    context_object_name = "user"
 
-    # Test function to ensure the logged in user can see only their own profile
+    # Test function to ensure the logged in user can only see their own
+    # profile, unless their role is administrator in which case they can see
+    # all profiles
     def test_func(self):
         logged_in_user = self.request.user
-        current_profile = self.get_object()
+        current_user = self.get_object()
 
-        return True if current_profile == logged_in_user else False
+        if (
+            current_user == logged_in_user
+            or logged_in_user.role == "administrator"
+        ):
+            return True
+        else:
+            return False
 
 
 class ProfileUpdateView(
@@ -36,10 +44,59 @@ class ProfileUpdateView(
     form_class = ProfileUpdateForm
     success_message = "Profile Changes Saved!"
 
-    # Test function to ensure the logged in user can edit only their own
-    # profile
+    # Method to return the id of the user whose profile is being viewed
+    # Used when cancelling the form to updated the profile
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_profile_owner = self.get_object()
+        context["current_profile_owner_id"] = current_profile_owner.id
+        return context
+
+    def get_form_class(self):
+        if self.request.user.role == "administrator":
+            form = AdminProfileUpdateForm
+        else:
+            form = ProfileUpdateForm
+        return form
+
+    # Test function to ensure the logged in user can only edit their own
+    # profile, unless their role is administrator in which case they can edit
+    # all profiles
     def test_func(self):
         logged_in_user = self.request.user
         current_profile = self.get_object()
 
-        return True if current_profile == logged_in_user else False
+        if (
+            current_profile == logged_in_user
+            or logged_in_user.role == "administrator"
+        ):
+            return True
+        else:
+            return False
+
+
+class ProfileListView(
+    LoginRequiredMixin, UserPassesTestMixin, generic.ListView
+):
+    model = CustomUser
+    template_name = "profile_list.html"
+    context_object_name = "users"
+
+    # Test function to ensure only a user with the administrator role can view
+    # the profile list
+    def test_func(self):
+        logged_in_user = self.request.user
+
+        if logged_in_user.role == "administrator":
+            return True
+        else:
+            return False
+
+    # Queryset based on form input
+    # CREDIT: Willem Van Onsem and Abu Yunus - Stack Overflow
+    # URL: https://stackoverflow.com/questions/63935852
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        username = self.request.GET.get("username")
+        if username:
+            return queryset.filter(username__icontains=username)

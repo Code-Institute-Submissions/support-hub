@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profile Search
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-5 d-flex flex-row justify-content-center">
+  <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
+    <div class="card">
+      <div class="card-header">
+        Profile
+      </div>
+      <div class="card-body">
+
+        <div>
+          <!-- 
+            CREDIT: Willem Van Onsem and Abu Yunus - Stack Overflow
+            URL: https://stackoverflow.com/questions/63935852
+          -->
+          <form method="GET" action="">
+            <input class="" type="text" name="username" placeholder="Search" value="{{ request.GET.username }}">
+            <input class="btn btn-primary" type="submit" value="Search">
+          </form>
+        </div>
+
+        {% for user in users %}
+
+        <p><a href="{{ user.get_absolute_url }}">{{user}}</a></p>
+
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
