@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Profile - {{ profile.username }}
+Profile Search
 {% endblock %}
 
 {% block content %}
@@ -14,10 +14,21 @@ Profile - {{ profile.username }}
       </div>
       <div class="card-body">
 
+        <div>
+          <!-- 
+            CREDIT: Willem Van Onsem and Abu Yunus - Stack Overflow
+            URL: https://stackoverflow.com/questions/63935852
+          -->
+          <form method="GET" action="">
+            <input class="" type="text" name="username" placeholder="Search" value="{{ request.GET.username }}">
+            <input class="btn btn-primary" type="submit" value="Search">
+          </form>
+        </div>
+
         {% for profile in profiles %}
 
         <p>{{profile}}</p>
-        
+
         {% endfor %}
 
       </div>
