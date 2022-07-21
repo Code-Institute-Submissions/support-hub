@@ -20,7 +20,7 @@ urlpatterns = [
         name="profile_update",
     ),
     path(
-        "accounts/profiles",
+        "accounts/profile/search",
         ProfileListView.as_view(),
         name="profile_list",
     ),
