@@ -20,7 +20,7 @@ Profile Edit - {{ user }}
             {{ form | crispy }}
             <div class="d-flex flex-row justify-content-end gap-1">
               <input class="btn btn-primary" type="submit" value="Save Changes">
-              <a class="btn btn-secondary" href="{% url 'profile_detail' user.pk %}">Cancel</a>
+              <a class="btn btn-secondary" href="{% url 'profile_detail' current_profile_owner_id %}">Cancel</a>
             </div>
           </form>
       </div>

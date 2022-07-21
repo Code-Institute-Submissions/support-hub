@@ -44,6 +44,15 @@ class ProfileUpdateView(
     form_class = ProfileUpdateForm
     success_message = "Profile Changes Saved!"
 
+    # Method to return the id of the user whose profile is being viewed
+    # Used when cancelling the form to updated the profile
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_profile_owner = self.get_object()
+        print(self.request)
+        context["current_profile_owner_id"] = current_profile_owner.id
+        return context
+
     def get_form_class(self):
         if self.request.user.role == "administrator":
             form = AdminProfileUpdateForm
