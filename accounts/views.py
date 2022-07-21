@@ -15,17 +15,17 @@ class ProfileDetailView(
 ):
     model = CustomUser
     template_name = "profile_detail.html"
-    context_object_name = "profile"
+    context_object_name = "user"
 
     # Test function to ensure the logged in user can only see their own
     # profile, unless their role is administrator in which case they can see
     # all profiles
     def test_func(self):
         logged_in_user = self.request.user
-        current_profile = self.get_object()
+        current_user = self.get_object()
 
         if (
-            current_profile == logged_in_user
+            current_user == logged_in_user
             or logged_in_user.role == "administrator"
         ):
             return True
@@ -49,7 +49,6 @@ class ProfileUpdateView(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_profile_owner = self.get_object()
-        print(self.request)
         context["current_profile_owner_id"] = current_profile_owner.id
         return context
 
@@ -81,7 +80,7 @@ class ProfileListView(
 ):
     model = CustomUser
     template_name = "profile_list.html"
-    context_object_name = "profiles"
+    context_object_name = "users"
 
     # Test function to ensure only a user with the administrator role can view
     # the profile list
