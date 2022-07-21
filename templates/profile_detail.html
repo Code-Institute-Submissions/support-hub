@@ -24,7 +24,7 @@ Profile - {{ profile.username }}
         </p>
         <p>{{ profile.email }} <a href="{% url 'account_email' %}">edit email address</a></p>
         <div class="d-flex flex-row justify-content-end gap-1">
-          <a href="{% url 'profile_update' user.pk %}" class="btn btn-primary">Edit Profile</a>
+          <a href="{% url 'profile_update' profile.id %}" class="btn btn-primary">Edit Profile</a>
         <a class="btn btn-outline-secondary" href="{% url 'account_change_password' %}">Change Password</a>
       </div>
       </div>

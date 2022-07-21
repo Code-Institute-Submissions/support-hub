@@ -27,7 +27,7 @@ Profile Search
 
         {% for profile in profiles %}
 
-        <p>{{profile}}</p>
+        <p><a href="{{ profile.get_absolute_url }}">{{profile}}</a></p>
 
         {% endfor %}
 
