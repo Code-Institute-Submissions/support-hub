@@ -25,9 +25,9 @@ Profile Search
           </form>
         </div>
 
-        {% for user in users %}
+        {% for profile_user in profile_users %}
 
-        <p><a href="{{ user.get_absolute_url }}">{{user}}</a></p>
+        <p><a href="{{ profile_user.get_absolute_url }}">{{profile_user}}</a></p>
 
         {% endfor %}
 

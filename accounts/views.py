@@ -15,7 +15,7 @@ class ProfileDetailView(
 ):
     model = CustomUser
     template_name = "profile_detail.html"
-    context_object_name = "user"
+    context_object_name = "profile_user"
 
     # Test function to ensure the logged in user can only see their own
     # profile, unless their role is administrator in which case they can see
@@ -80,7 +80,7 @@ class ProfileListView(
 ):
     model = CustomUser
     template_name = "profile_list.html"
-    context_object_name = "users"
+    context_object_name = "profile_users"
 
     # Test function to ensure only a user with the administrator role can view
     # the profile list
