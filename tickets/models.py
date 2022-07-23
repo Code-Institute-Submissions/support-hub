@@ -3,9 +3,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.html import strip_tags
 from model_utils import Choices
-from cloudinary.models import CloudinaryField
 from datetime import datetime, timezone
-
+from .validators import validate_image
 
 # Model to represent the Team tickets and users can be assigned
 class Team(models.Model):
@@ -52,11 +51,10 @@ class Ticket(models.Model):
     )
     title = models.CharField(max_length=50, unique=False, blank=False)
     description = models.TextField()
-    ticket_image = CloudinaryField(
-        "image",
-        allowed_formats=["jpg", "png", "pdf"],
-        format="jpg",
+    ticket_image = models.ImageField(
+        validators=[validate_image],
         blank=True,
+        help_text="Only 'jpg' or 'png' files permitted. Maximum file size is 3MB.",
     )
     status = models.CharField(
         max_length=10,

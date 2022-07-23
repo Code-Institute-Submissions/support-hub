@@ -15,7 +15,7 @@ class ProfileDetailView(
 ):
     model = CustomUser
     template_name = "profile_detail.html"
-    context_object_name = "user"
+    context_object_name = "profile_user"
 
     # Test function to ensure the logged in user can only see their own
     # profile, unless their role is administrator in which case they can see
@@ -44,12 +44,15 @@ class ProfileUpdateView(
     form_class = ProfileUpdateForm
     success_message = "Profile Changes Saved!"
 
-    # Method to return the id of the user whose profile is being viewed
-    # Used when cancelling the form to updated the profile
+    # Method to return the user whose profile is being viewed, used when
+    # cancelling the form to updated the profile
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_profile_owner = self.get_object()
         context["current_profile_owner_id"] = current_profile_owner.id
+        context[
+            "current_profile_owner_username"
+        ] = current_profile_owner.username
         return context
 
     def get_form_class(self):
@@ -80,7 +83,7 @@ class ProfileListView(
 ):
     model = CustomUser
     template_name = "profile_list.html"
-    context_object_name = "users"
+    context_object_name = "profile_users"
 
     # Test function to ensure only a user with the administrator role can view
     # the profile list
