@@ -82,10 +82,31 @@ class TicketCreateView(LoginRequiredMixin, generic.CreateView):
     # CREDIT: Piyush Maurya - Stack Overflow
     # URL: https://stackoverflow.com/a/45221181
     def form_valid(self, form):
+        form = self.get_form()
+
+        # Get the ticket model objet
+        ticket_obj = form.save(commit=False)
+
         # If the user has staff role, this forces the author to be set as
         # themselves whereas elevated staff can set another user as the author
         if self.request.user.role == "staff":
             form.instance.author = self.request.user
+
+        # If the ticket object contains an image, try to save the form by
+        # returning valid
+        if ticket_obj.ticket_image:
+            try:
+                return super(TicketCreateView, self).form_valid(form)
+            except Exception as e:
+                messages.error(
+                    self.request,
+                    (
+                        "An error occurred when processing your request. "
+                        "Your ticket has not been saved."
+                    ),
+                )
+                return redirect("ticket_list")
+
         return super(TicketCreateView, self).form_valid(form)
 
 
