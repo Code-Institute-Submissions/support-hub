@@ -6,10 +6,10 @@ from django.core.files.uploadedfile import (
 
 # Custom validator to check image context type and file size
 def validate_image(image_obj):
-    file = image_obj.file
+    file = image_obj
 
     # Maximum permitted file size in bytes (3MB)
-    maximum_file_size = 20 * 1024 * 1024
+    maximum_file_size = 3 * 1024 * 1024
 
     # InMemoryUploadedFile - Used for small files
     # TemporaryUploadedFile - Used for larger files
