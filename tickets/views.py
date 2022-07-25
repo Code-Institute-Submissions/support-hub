@@ -200,6 +200,30 @@ class TicketUpdateView(
             form = StaffTicketUpdateForm
         return form
 
+    def form_valid(self, form):
+
+        # Get the ticket objet
+        ticket_obj = form.save(commit=False)
+
+        # If the ticket object contains an image, try to save the form by
+        # returning valid. This will catch any cloudinary errors not caught by
+        # the model validation (invalid api key etc.)
+        if ticket_obj.ticket_image:
+            try:
+                return super(TicketUpdateView, self).form_valid(form)
+            except Exception as e:
+                messages.error(
+                    self.request,
+                    (
+                        "An error occurred when processing your request. "
+                        "Your changes have not been saved.</br></br>"
+                        f"Error detail: {e}"
+                    ),
+                )
+                return redirect("ticket_list")
+        else:
+            return super(TicketUpdateView, self).form_valid(form)
+
     def test_func(self):
         logged_in_user = self.request.user
         current_ticket = self.get_object()
