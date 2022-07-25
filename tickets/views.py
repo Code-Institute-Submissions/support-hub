@@ -2,9 +2,13 @@ from django.shortcuts import redirect
 from django.views import generic, View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.http import Http404
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from django.conf import settings
 from .models import Ticket, Note
 from .filters import StaffTicketFilter, ElevatedUserTicketFilter
 from .forms import (
@@ -58,9 +62,12 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
 
 
 # CreateView to facilitate the creation of tickets
-class TicketCreateView(LoginRequiredMixin, generic.CreateView):
+class TicketCreateView(
+    LoginRequiredMixin, SuccessMessageMixin, generic.CreateView
+):
     model = Ticket
     template_name = "ticket_create.html"
+    success_message = "Ticket created successfully."
 
     # Present different forms base on user roles
     def get_form_class(self):
@@ -156,10 +163,40 @@ class NoteFormView(SingleObjectMixin, generic.FormView):
         note.author = self.request.user
         note.save()
 
-        # Get the current ticket and call the model function to set its
-        # updated_on field to the current time
-        ticket = Ticket.objects.get(pk=self.object.pk)
-        ticket.set_ticket_updated_now()
+        # Call the model function to set its updated_on field to the current
+        # time
+        note.ticket.set_ticket_updated_now()
+
+        if note.ticket.author != note.author:
+            try:
+                send_mail(
+                    subject=f"Support Hub - {note.ticket}",
+                    message=(
+                        "Your Ticket has an update!\n\n"
+                        f"Update posted by '{note.author}':\n"
+                        f"'{note.body_without_tags}'\n\n"
+                        f"Current ticket status is '{note.ticket.status}'\n"
+                        "Use this link to view this ticket in Support Hub "
+                        f"'http://127.0.0.1:8000{note.ticket.get_absolute_url()}'"
+                    ),
+                    html_message=(
+                        "<h2>Your Ticket has an update!</h2>"
+                        f"<p>Update posted by '{note.author}':</p>"
+                        f"<p>'{note.body_without_tags}'</p>"
+                        "<br>"
+                        f"<p>Current ticket status is '{note.ticket.status}'</p>"
+                        "<p>Click the link to view this ticket in Support Hub "
+                        f"<a href='{self.request.META['HTTP_HOST']}{note.ticket.get_absolute_url()}'>Ticket Link</a></p>"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[note.ticket.author.email],
+                    fail_silently=False,
+                )
+            except SMTPException as e:
+                messages.error(
+                    self.request,
+                    f"Error sending email update to ticket owner - '{note.ticket.author}'{e}",
+                )
 
         return super().form_valid(note)
 
@@ -185,10 +222,14 @@ class TicketView(View):
 
 
 class TicketUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    SuccessMessageMixin,
+    generic.UpdateView,
 ):
     queryset = Ticket.objects.all()
     template_name = "ticket_update.html"
+    success_message = "Ticket updated successfully."
 
     # Present different forms base on user roles
     def get_form_class(self):
