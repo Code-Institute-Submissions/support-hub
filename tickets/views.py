@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.views import generic, View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic.detail import SingleObjectMixin
 from django.urls import reverse
 from django.http import Http404
@@ -61,9 +62,12 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
 
 
 # CreateView to facilitate the creation of tickets
-class TicketCreateView(LoginRequiredMixin, generic.CreateView):
+class TicketCreateView(
+    LoginRequiredMixin, SuccessMessageMixin, generic.CreateView
+):
     model = Ticket
     template_name = "ticket_create.html"
+    success_message = "Ticket created successfully."
 
     # Present different forms base on user roles
     def get_form_class(self):
@@ -218,10 +222,14 @@ class TicketView(View):
 
 
 class TicketUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+    SuccessMessageMixin,
+    generic.UpdateView,
 ):
     queryset = Ticket.objects.all()
     template_name = "ticket_update.html"
+    success_message = "Ticket updated successfully."
 
     # Present different forms base on user roles
     def get_form_class(self):
