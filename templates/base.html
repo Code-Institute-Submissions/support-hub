@@ -69,14 +69,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
-          {{ message }}
+          {{ message | safe }}
         </div>
       </div>
       {% endfor %}
     </div>
   </div>
   {% endif %}
-<!-- Messages End -->
+  <!-- Messages End -->
 
   <!-- Main Start -->
   <main>
