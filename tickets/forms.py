@@ -2,6 +2,7 @@ from django import forms
 from .models import Ticket, Note
 from django_summernote.fields import SummernoteWidget
 from crispy_forms.helper import FormHelper
+from accounts.models import CustomUser
 
 
 # Ticket Update Form for Staff
@@ -56,6 +57,9 @@ class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
 class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ElevatedUserTicketForm, self).__init__(*args, **kwargs)
+        self.fields[
+            "assigned_technician"
+        ].queryset = CustomUser.objects.filter(role="technician")
 
     class Meta(StaffTicketCreationForm):
         model = Ticket
