@@ -5,7 +5,7 @@ from django.utils.html import strip_tags
 from model_utils import Choices
 from datetime import datetime, timezone
 from cloudinary.models import CloudinaryField
-from .validators import validate_image
+from .validators import validate_image, textfield_not_empty
 
 # Model to represent the Team tickets and users can be assigned
 class Team(models.Model):
@@ -51,7 +51,7 @@ class Ticket(models.Model):
         related_name="ticket_author",
     )
     title = models.CharField(max_length=50, unique=False, blank=False)
-    description = models.TextField()
+    description = models.TextField(validators=[textfield_not_empty])
     ticket_image = CloudinaryField(
         "image",
         validators=[validate_image],

@@ -3,6 +3,7 @@ from django.core.files.uploadedfile import (
     InMemoryUploadedFile,
     TemporaryUploadedFile,
 )
+from django.utils.html import strip_tags
 from PIL import Image
 
 # Custom validator to check image context type and file size
@@ -50,3 +51,13 @@ def validate_image(image_obj):
                 "Upload a valid image. The file you uploaded was either not "
                 "an image or a corrupted image."
             )
+
+
+# Custom validator to ensure the ticket description TextField doesn't
+# contain only whitespace
+def textfield_not_empty(textfield):
+    # Strip HTML tags, replace non-breaking spaces and strip any remain
+    # whitespace
+    cleaned_data = strip_tags(textfield).replace("&nbsp;", "").strip()
+    if cleaned_data == "":
+        raise ValidationError("Please enter a detailed description.")
