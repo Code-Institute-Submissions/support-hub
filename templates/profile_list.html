@@ -1,39 +1,48 @@
 {% extends "base.html" %}
-
-{% block title %}
-Profile Search
-{% endblock %}
-
-{% block content %}
-
-<div class="container-fluid py-5 d-flex flex-row justify-content-center">
-  <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
-    <div class="card">
-      <div class="card-header">
-        Profile
-      </div>
-      <div class="card-body">
-
-        <div>
+  <!-- page title -->
+  {% block title %}Profile Search{% endblock %}
+  {% block content %}
+  <div class="container-fluid py-5 d-flex flex-row justify-content-center">
+    <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title text-center">Profile Search</h1>
+          <p class="card-text">
+            Please enter a username to search for. Users personal details cannot be changed, but you may change their
+            <b>role</b> and/or <b>team</b>.
+          </p>
           <!-- 
+            Form to used to search for usernames
             CREDIT: Willem Van Onsem and Abu Yunus - Stack Overflow
             URL: https://stackoverflow.com/questions/63935852
           -->
-          <form method="GET" action="">
-            <input class="" type="text" name="username" placeholder="Search" value="{{ request.GET.username }}">
-            <input class="btn btn-primary" type="submit" value="Search">
+          <form method="GET">
+            <label for="username">Username to search for:</label>
+            <div class="input-group mb-3">
+              <input class="form-control" type="text" name="username" id="username" placeholder="Username"
+                value="{{ request.GET.username }}" aria-label="username to be used in search"
+                aria-describedby="search-button">
+              <button class="btn btn-primary" type="submit" id="search-button">Search</button>
+            </div>
           </form>
         </div>
-
-        {% for profile_user in profile_users %}
-
-        <p><a href="{{ profile_user.get_absolute_url }}">{{profile_user}}</a></p>
-
-        {% endfor %}
-
       </div>
+      {% for profile_user in profile_users %}
+      <!-- 
+        for each user profile returned by the search, display select details in
+        a card element with a button to link to the profile view 
+      -->
+      <div class="card">
+        <div class="card-header text-center"><b>{{profile_user}}</b></div>
+        <div class="card-body">
+          <p><b>Full name:</b> {{profile_user.full_name}}</p>
+          <p><b>Email:</b> {{profile_user.email}}</p>
+          <div class="d-flex flex-column flex-lg-row justify-content-end">
+            <a href="{{ profile_user.get_absolute_url }}" class="btn btn-primary">View Profile</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
-</div>
-
 {% endblock %}

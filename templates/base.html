@@ -1,5 +1,9 @@
-{% load static %}
+<!-- 
+  base template
 
+  used on all pages to load the navigation and footer, and handle messaging using bootstrap toasts
+-->
+{% load static %}
 <!DOCTYPE html>
 <html class="h-100" lang="en">
 
@@ -7,67 +11,134 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- load bootstrap v5.1.3 css and js min files from the cdn -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
     integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
   </script>
+  <!-- load font awesome icons (using v5.15.4) -->
+  <script src="https://kit.fontawesome.com/1b0e724256.js" crossorigin="anonymous"></script>
+  <!-- load my style sheet and javascript files from static -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <script src="{% static 'js/script.js' %}"></script>
+  <!-- page title block used by other pages to set the title element -->
   <title>Support Hub - {% block title %}{% endblock %}</title>
 </head>
 
 <body class="d-flex flex-column h-100 main-bg">
-
   <!-- Navigation Element -->
-  <!-- Active Navigation -->
-  <!-- CREDIT: Will Howell - Stack Overflow
-  URL: https://stackoverflow.com/a/39644474 -->
+  <!-- 
+    Active Navigation Links
+    CREDIT: Will Howell - Stack Overflow
+    URL: https://stackoverflow.com/a/39644474 
+  -->
   {% with url_name=request.resolver_match.url_name %}
-  <nav id="navigation" class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+  <nav id="navigation" class="navbar navbar-light navbar-expand-lg fixed-top bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'home' %}"><span>SUPPORT HUB LOGO</span></a>
+      <a class="navbar-brand text-black" href="{% url 'home' %}">
+        <span>
+          <i class="fas fa-life-ring"></i>
+          Support Hub
+        </span>
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
         aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarText">
-        <div class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="navbar-nav ms-auto mb-2 mb-lg-0">
           <a class="nav-item nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'home' %}">Home</a>
-
           {% if user.is_authenticated %}
-          <span style="right:30px;position:absolute; align-self:center">Logged in as: {{ user.username }}</span>
-          <a class="nav-item nav-link {% if url_name == 'ticket_list' %}active{% endif %}" href="{% url 'ticket_list' %}">View Requests</a>
-          <a class="nav-item nav-link {% if url_name == 'ticket_create' %}active{% endif %}" href="{% url 'ticket_create' %}">Submit Request</a>
-          <a class="nav-item nav-link" href="{% url 'profile_detail' user.pk %}">Profile</a>
-          {% if user.role == 'administrator' %}
-          <a class="nav-item nav-link" href="{% url 'profile_list' %}">Site Admin</a>
-          {% endif %}
-          <a class="nav-item nav-link {% if url_name == 'account_logout' %}active{% endif %}" href="{% url 'account_logout' %}">Logout</a>
+          <!-- 
+              elements within this statement will be displayed only if the user is authenticated 
+              otherwise they will see links to the home page, and to register/signup
+            -->
+          <a class="nav-item nav-link {% if url_name == 'ticket_list' %}active{% endif %}"
+            href="{% url 'ticket_list' %}">View Requests</a>
+          <a class="nav-item nav-link {% if url_name == 'ticket_create' %}active{% endif %}"
+            href="{% url 'ticket_create' %}">Submit a request</a>
+          <!-- the navigation items in this div are hidden at the bootstrap large breakpoint -->
+          <div class="navbar-nav me-auto d-lg-none d-md-block">
+            <a class="nav-item nav-link" href="{% url 'profile_detail' user.pk %}">Profile</a>
+            {% if user.role == 'administrator' %}
+            <!-- 
+                if the authenticated user has a role of 'administrator' will be presented with the 'user search' link
+                otherwise it will not be displayed
+              -->
+            <a class="nav-item nav-link" href="{% url 'profile_list' %}">User Search</a>
+            {% endif %}
+            <a class="nav-item nav-link {% if url_name == 'account_logout' %}active{% endif %}"
+              href="{% url 'account_logout' %}">Logout</a>
+          </div>
           {% else %}
-          <a class="nav-item nav-link {% if url_name == 'account_signup' %}active{% endif %}" href="{% url 'account_signup' %}">Register</a>
-          <a class="nav-item nav-link {% if url_name == 'account_login' %}active{% endif %}" href="{% url 'account_login' %}">Login</a>
+          <!-- navigation element for non-authenticated users -->
+          <a class="nav-item nav-link {% if url_name == 'account_signup' %}active{% endif %}"
+            href="{% url 'account_signup' %}">Register</a>
+          <a class="nav-item nav-link {% if url_name == 'account_login' %}active{% endif %}"
+            href="{% url 'account_login' %}">Login</a>
+
           {% endif %}
 
         </div>
+
+
+        {% if user.is_authenticated %}
+        <!--
+          if the user is authenticated, this dropdown is displayed at
+          the bootstrap large breakpoint
+        -->
+        <div class="dropdown ms-1 d-lg-block d-none">
+          <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown"
+            aria-expanded="false" aria-label="user options menu">
+            <i class="fas fa-user pe-2"></i>{{ user.username }}
+          </button>
+          <ul class="dropdown-menu dropdown-menu-lg-end">
+            <li><a class="dropdown-item {% if url_name == 'profile_detail' %}active{% endif %}"
+                href="{% url 'profile_detail' user.pk %}">Profile</a></li>
+            {% if user.role == 'administrator' %}
+            <!-- 
+              if the authenticated user has a role of 'administrator' will be presented with the 'user search' link
+              otherwise it will not be displayed
+            -->
+            <li><a class="dropdown-item {% if url_name == 'profile_list' %}active{% endif %}"
+                href="{% url 'profile_list' %}">User Search</a></li>
+            {% endif %}
+            <li><a class="dropdown-item {% if url_name == 'account_logout' %}active{% endif %}"
+                href="{% url 'account_logout' %}">Logout</a></li>
+          </ul>
+        </div>
+        {% endif %}
       </div>
     </div>
   </nav>
-  {% endwith %}
   <!-- Navigation End -->
 
-  <!-- Messages Start -->
+  <!-- Messages using bootstrap toast -->
   {% if messages %}
+  <!-- if there are any message held in the requests session they will be displayed as stacked elements -->
   <div aria-live="polite" aria-atomic="true" class="position-relative">
     <div class="toast-container position-absolute top-0 end-0 p-3">
       {% for message in messages %}
-      <div class="toast" {% if messaage.tags == 'error' %} role="alert" aria-live="assertive" {% else %} role="status"
+      <!-- 
+        for each message, use message tags to set 'role' and 'aria-live' attributes
+
+        only errors should use 'aria-live="assertive"' and 'role="alert"' to highlight potential
+        problems to users using screen readers.
+      -->
+      <div class="toast" {% if message.tags == 'error' %} role="alert" aria-live="assertive" {% else %} role="status"
         aria-live="polite" {% endif %} aria-atomic="true">
         <div class="toast-header">
-          <!-- <img src="..." class="rounded me-2" alt="..."> -->
-          <strong class="me-auto text-capitalize">{{ message.tags }}</strong>
+          <!-- icon to use in toast header is selected using message tags, only error and information are used currently -->
+          {% if message.tags == 'error' %}
+          <i class="fas fa-exclamation-triangle"></i>
+          {% else %}
+          <i class="fas fa-info-circle"></i>
+          {% endif %}
+          <strong class="me-auto text-capitalize ps-1">{{ message.tags }}</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
+        <!-- toast body uses the template tag safe so the messages can be formatted using html -->
         <div class="toast-body">
           {{ message | safe }}
         </div>
@@ -81,33 +152,30 @@
   <!-- Main Start -->
   <main>
     {% block content %}
-
     {% endblock %}
   </main>
   <!-- Main End -->
 
-    <!-- Footer Start -->
-    <!-- CREDIT: Adapted from Bootstrap Examples
+  <!-- Footer Start -->
+  <!-- CREDIT: Adapted from Bootstrap Examples
     https://getbootstrap.com/docs/5.1/examples/footers/ -->
-    <footer class="mt-auto d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-      <div class="col-md-4 d-flex align-items-center">
-        <span class="ps-4 text-muted">For educational purposes only</span>
-      </div>
-  
-      <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#twitter"></use>
-            </svg></a></li>
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#instagram"></use>
-            </svg></a></li>
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24">
-              <use xlink:href="#facebook"></use>
-            </svg></a></li>
-      </ul>
-    </footer>
-    <!-- Footer End -->
+  <footer class="mt-auto d-flex flex-wrap justify-content-between align-items-center py-3 border-top bg-white">
+    <div class="col-md-4 d-flex align-items-center">
+      <span class="ps-4">Created for educational purposes only.</span>
+    </div>
 
+    <ul class="nav col-md-4 align-items-center justify-content-end pe-4 list-unstyled d-flex">
+      <!-- display image credit if user is on the home page otherwise hide the link -->
+      {% if url_name == 'home' %}<li class="ms-3"><a class="text-black"
+          href="https://www.freepik.com/vectors/flat-illustration">Image Credit</a></li>{% endif %}
+      <li class="ms-3"><a class="h2 text-black" href="https://github.com/ianmeigh"><i class="fab fa-github"></i></a>
+      </li>
+      <li class="ms-3"><a class="h2 text-black" href="https://www.linkedin.com/in/ianmeigh/"><i
+            class="fab fa-linkedin"></i></a></li>
+    </ul>
+  </footer>
+  <!-- Footer End -->
+  {% endwith %}
 </body>
 
 </html>

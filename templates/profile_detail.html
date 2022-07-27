@@ -1,39 +1,53 @@
 {% extends "base.html" %}
+  <!-- page title -->
+  {% block title %}Profile - {{ profile_user }}{% endblock %}
+  {% block content %}
+  <!-- display select authenticated user details with links to use django-allauth pages to change password and manage email -->
+  <div class="container-fluid py-5 d-flex flex-row justify-content-center">
+    <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
+      <div class="card">
+        <div class="card-header text-center">
+          Profile
+        </div>
+        <div class="card-body">
+          <p><b>Username:</b> {{ profile_user.username }}</p>
+          <p>
+            <b>Full Name:</b>
+            {% if profile_user.first_name or user.last_name %}
+              <!--
+                if the user has set a first or last name this will be displayed
+                using the modal property method full_name, otherwise display the
+                text 'None'
 
-{% block title %}
-Profile - {{ profile_user  }}
-{% endblock %}
-
-{% block content %}
-
-<div class="container-fluid py-5 d-flex flex-row justify-content-center">
-  <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
-    <div class="card">
-      <div class="card-header">
-        Profile
-      </div>
-      <div class="card-body">
-        <p>Username: {{ profile_user.username }}</p>
-        <p>
-          Full Name: 
-          {% if profile_user.first_name or user.last_name %}
-          {{ profile_user.full_name }}
-          {% else %}
-          No name provided
+                first name and last name are required registration fields but a
+                superuser is able to create users without this information
+              -->
+              {{ profile_user.full_name }}
+            {% else %}
+              No name provided
+            {% endif %}
+          </p>
+          <p>
+            <b>Email address:</b> {{ profile_user.email }}
+            {% if profile_user == user %}
+              <!-- only display the link to manage email addresses to users when they view their own profile -->
+              <a href="{% url 'account_email' %}">edit email address</a>
+            {% endif %}
+          </p>
+          {% if user.role == 'technician' or user.role == 'administrator' %}
+            <!-- users with elevated roles can also see the team and role they have been assigned -->
+            <p><b>Team:</b> {{ profile_user.team }}</p>
+            <p><b>Role:</b> {{ profile_user.role }}</p>
           {% endif %}
-        </p>
-        <p>Email address: {{ user.email }} <a href="{% url 'account_email' %}">edit email address</a></p>
-        {% if profile_user.role == 'technician' or profile_user.role == 'administrator' %}
-        <p>Team: {{ profile_user.team }}</p>
-        <p>Role: {{ profile_user.role }}</p>
-        {% endif %}
-        <div class="d-flex flex-row justify-content-end gap-1">
-          <a href="{% url 'profile_update' profile_user.id %}" class="btn btn-primary">Edit Profile</a>
-        <a class="btn btn-outline-secondary" href="{% url 'account_change_password' %}">Change Password</a>
-      </div>
+          <div class="d-flex flex-row justify-content-end gap-1">
+            <a href="{% url 'profile_update' profile_user.id %}" class="btn btn-primary">Edit Profile</a>
+            {% if profile_user == user %}
+              <!-- only display the link to change password to users when they view their own profile -->
+              <a class="btn btn-outline-secondary" href="{% url 'account_change_password' %}">Change Password</a>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 {% endblock %}

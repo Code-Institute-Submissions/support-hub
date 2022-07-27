@@ -1,8 +1,95 @@
 {% extends "base.html" %}
-
+{% load static %}
 <!-- Page Title -->
 {% block title %}Test Home Page{% endblock %}
-
 {% block content %}
-<h1>Welcome to support hub!</h1>
+<!-- 
+  CREDIT: Layout Sections Adapted from Bootstrap Examples
+  URL: https://getbootstrap.com/docs/5.1/examples/ 
+-->
+<div class="fluid-container bg-body text-center">
+  <!-- hero Section -->
+  <section class="pb-3 index-alt-section">
+    <div class="px-4 py-5">
+      <img class="d-block mx-auto mb-4" src="{% static 'images/hero.svg' %}" alt="" width="350" height="350">
+      <h1 class="display-5 fw-bold">Welcome to Support Hub!</h1>
+      <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">Support Hub is the easy way to bring support services to your online business!</p>
+        <br>
+        {% if user.is_authenticated %}
+        <!-- paragraph element and the call to action is dependant on user authentication status -->
+        <p class="lead mb-4">As you're logged in why not submit a new request!</p>
+        {% else %}
+        <p class="lead mb-4">Login or register to try our interactive demo and experience our system for yourself!</p>
+        {% endif %}
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+          {% if user.is_authenticated %}
+          <a class="btn btn-primary btn-lg px-4 gap-3" href="{% url 'ticket_create' %}">Submit a request</a>
+          {% else %}
+          <a class="btn btn-primary btn-lg px-4 gap-3" href="{% url 'account_login' %}">Login / Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- features section -->
+  <section class="py-3">
+    <div class="fluid-container bg-body py-5">
+      <div class="container">
+        <div class="row row-cols-1 row-cols-lg-3 mx-1 mx-lg-0">
+          <div class="feature col">
+            <div
+              class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+              <i class="fas fa-server"></i>
+            </div>
+            <h2>Hosting</h2>
+            <p>We host the support portal for you with out partners so you don't have to worry about hidden costs! All
+              you have to do is configure the portal to suit your company.</p>
+          </div>
+          <div class="feature col">
+            <div
+              class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+              <i class="fas fa-code"></i>
+            </div>
+            <h2>Flexibility</h2>
+            <p>Got an idea for a feature to help your company, out development team is on hand to make that wish a
+              reality.</p>
+          </div>
+          <div class="feature col">
+            <div
+              class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">
+              <i class="fas fa-book"></i>
+            </div>
+            <h2>Knowledgebase</h2>
+            <p><span class="fw-bold text-danger">Coming soon!</span> Knowledgebase functionality to allow your customers
+              to find answers to common problems and information.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- contact section -->
+  <section class="py-3 h-100 index-alt-section">
+    <div class="container bg-body py-5" style="background-color: hsl(24, 26%, 96%) !important;">
+      <div class="row align-items-md-stretch mx-1 mx-lg-0">
+        <div class="col-md-12">
+          <div class="h-100 p-5 bg-white border rounded-3">
+            <h2>Want to know more?</h2>
+            <p>Send us your email address and one of out sales representatives with get back to you ASAP to arrange a
+              call!</p>
+            <form class="d-flex flex-row justify-content-center gap-2">
+              <div>
+                <label for="email" class="visually-hidden">Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="Email address">
+              </div>
+              <div>
+                <button type="submit" class="btn btn-primary mb-3">Get in touch!</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
 {% endblock %}
