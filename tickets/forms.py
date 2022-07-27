@@ -13,6 +13,7 @@ class StaffTicketUpdateForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = (
+            "category",
             "description",
             "ticket_image",
         )
@@ -34,7 +35,6 @@ class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
         model = Ticket
         fields = StaffTicketUpdateForm.Meta.fields + (
             "type",
-            "category",
             "title",
         )
 
