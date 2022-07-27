@@ -1,38 +1,36 @@
 {% extends "base.html" %}
-
-{% block title %}
-New Request
-{% endblock %}
-
-{% block content %}
-
-{% load crispy_forms_tags %}
-
-<div class="container-fluid py-5 d-flex flex-row justify-content-center">
-  <div class="max-w-600 w-100">
-    <div>
-      <h1 class="">Create a new request</h1>
-      <ol class="py-3">
-        <li>Please select a <strong>Type</strong> for your request.</li>
-        <ul>
-          <li><strong>Request</strong> - Problem not currently causing downtime.</li>
-          <li><strong>Incident</strong> - Problem causing downtime.</li>
-        </ul>
-        <li>Please enter a <strong>title</strong> and <strong>description</strong> for your request.</li>
-        <li>An image or pdf file can be uploaded if required but should be <strong>no bigger than 10MB</strong>.</li>
-      </ol>
-      <form action="" method="POST" enctype="multipart/form-data">
-
-        {% csrf_token %}
-        {{ form | crispy }}
-
-        <div class="d-flex flex-row justify-content-end gap-1">
-          <input class="btn btn-primary" type="submit" value="Submit Request">
-          <a class="btn btn-secondary" href="{% url 'ticket_list' %}">Cancel</a>
-        </div>
-      </form>
+  <!-- page title -->
+  {% block title %}New Request{% endblock %}
+  {% block content %}
+  {% load crispy_forms_tags %}
+  <div class="container-fluid py-5 d-flex flex-row justify-content-center">
+    <div class="max-w-600 w-100">
+      <div class="p-md-4 p-2 border rounded-3 form-container-bg-color">
+        <h1 class="">Create a new request</h1>
+        <ol class="py-3">
+          <li>Please select a <b>Type</b> and <b>Category</b> for your request.</li>
+          <li>
+            <ul>
+              <li><b>Request</b> - Problem not currently causing downtime.</li>
+              <li><b>Incident</b> - Problem causing downtime.</li>
+            </ul>
+          </li>
+          <li>Please enter a <b>title</b> and <b>description</b> for your request.</li>
+          <li>A 'jpeg' or 'png' image file can be uploaded if required but should be <b>no bigger than 3MB</b>.</li>
+        </ol>
+          <!-- 
+            form used to submit a request rendered with django-crispy-forms
+            using the bootstrap 5 template pack
+          -->
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form | crispy }}
+          <div class="d-flex flex-row justify-content-end gap-1">
+            <input class="btn btn-primary" type="submit" value="Submit Request">
+            <a class="btn btn-secondary" href="{% url 'ticket_list' %}">Cancel</a>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
 {% endblock %}

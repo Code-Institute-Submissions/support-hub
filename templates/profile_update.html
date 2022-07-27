@@ -1,31 +1,30 @@
 {% extends "base.html" %}
-
-{% block title %}
-Profile Edit - {{ current_profile_owner_username }}
-{% endblock %}
-
-{% block content %}
-
-{% load crispy_forms_tags %}
-
-<div class="container-fluid py-5 d-flex flex-row justify-content-center">
-  <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
-    <div class="card">
-      <div class="card-header">
-        Profile
-      </div>
-      <div class="card-body">
-          <form action="" method="POST">
+  <!-- page title -->
+  {% block title %}Profile Edit - {{ current_profile_owner_username }}{% endblock %}
+  {% block content %}
+  {% load crispy_forms_tags %}
+  <div class="container-fluid py-5 d-flex flex-row justify-content-center">
+    <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-600">
+      <div class="card">
+        <div class="card-header">
+          Profile
+        </div>
+        <div class="card-body">
+          <!-- 
+            form used to edit profile details rendered with django-crispy-forms
+            using the bootstrap 5 template pack
+          -->
+          <form method="POST">
             {% csrf_token %}
             {{ form | crispy }}
             <div class="d-flex flex-row justify-content-end gap-1">
               <input class="btn btn-primary" type="submit" value="Save Changes">
+              <!-- cancel button will return a user to the current profile's detail url -->
               <a class="btn btn-secondary" href="{% url 'profile_detail' current_profile_owner_id %}">Cancel</a>
             </div>
           </form>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 {% endblock %}

@@ -1,172 +1,176 @@
 {% extends "base.html" %}
-
-{% block title %}
-{{ticket}}
-{% endblock %}
-
-{% block content %}
-
-{% load crispy_forms_tags %}
-
-<div class="container-fluid py-5 d-flex flex-row justify-content-center">
-  <div class="ticket-detail-container mt-3 w-100">
-    <!-- Ticket Information -->
-    <div class="ticket-detail-info-container">
-      <div class="ticket-detail-info">
+  <!-- page title -->
+  {% block title %}{{ticket}}{% endblock %}
+  {% block content %}
+  {% load crispy_forms_tags %}
+  <!-- display selected ticket details, related options and a comments form -->
+  <div class="container-fluid py-5 d-flex flex-row justify-content-center">
+    <div class="d-flex flex-column gap-3 mb-3 flex-lg-row-reverse mt-3 w-100 ticket-detail-container">
+      <!-- Ticket Information Container -->
+      <div class="ticket-detail-info-container">
+        <div class="d-flex flex-column-reverse flex-lg-column gap-3">
+          <!-- Ticket Information Card -->
+          <div class="card">
+            <div class="card-header text-center">
+              Ticket Information
+            </div>
+            <div class="card-body">
+              <p class="card-text">Request #: {{ticket.id}}</p>
+              <p>Status: 
+                <span class="card-text ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
+              </p>
+              <p class="card-text">Type: {{ ticket.get_type_display }}</p>
+              <p class="card-text">Category: {{ ticket.category }}</p>
+              <p class="card-text">Priority: {{ ticket.get_priority_display }}</p>
+              <p class="card-text">
+                Assignee:
+                {% if ticket.assigned_technician %}
+                  <b>{{ticket.assigned_technician}}</b>
+                {% else %}
+                  Unassigned
+                {% endif%}
+              </p>
+              <p class="card-text">Team:
+                {% if ticket.assigned_team %}
+                  <b>{{ticket.assigned_team}}</b>
+                {% else %}
+                  Unassigned
+                {% endif%}
+              </p>
+            </div>
+          </div>
+          <!-- Ticket Actions Card -->
+          <div class="card">
+            <div class="card-header text-center">
+              Actions
+            </div>
+            <div class="card-body d-flex flex-row justify-content-center gap-1">
+              <a href="{% url 'ticket_update' ticket.pk %}" class="btn btn-primary">Edit</a>
+              {% if request.user.role == 'technician' or request.user.role == 'administrator' %}
+                <!-- 
+                  Modal trigger
+                  CREDIT: Adapted from Bootstrap Documentation
+                  https://getbootstrap.com/docs/5.0/components/modal/
+                -->
+                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal-{{ ticket.id }}">
+                  Delete
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ticket Information Container End -->
+      <!-- Ticket Body and Comments Container -->
+      <div class="d-flex flex-column gap-3 text-break ticket-detail-body-container">
+        <!-- Ticket Body -->
         <div class="card">
-          <div class="card-header">
-            Ticket Information
+          <div class="card-header text-center">
+            Request
           </div>
           <div class="card-body">
-            <p class="card-text">Request #: {{ticket.id}}</p>
-            <p>Status: <span
-                class="card-text ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
+            <p class="card-text">Raised by: {{ ticket.author }}</p>
+            <p class="card-text">Created on: {{ ticket.created_on|date:"dS F, Y" }} at {{ ticket.created_on|date:"H:i" }}
             </p>
-            <p class="card-text">Type: {{ ticket.get_type_display }}</p>
-            <p class="card-text">Category: {{ ticket.category }}</p>
-            <p class="card-text">Priority: {{ ticket.get_priority_display }}</p>
             <p class="card-text">
-              Assignee:
-              {% if ticket.assigned_technician %}
-              <strong>{{ticket.assigned_technician}}</strong>
+              Last update:
+              <!-- 
+                if the ticket has not been been updated since its creation
+                display a dash, otherwise use the 'timesince' template tag to
+                format the 'updated_on' date as the time since the current
+                datetime (retrieved using a model method)
+              -->
+              {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
+                -
               {% else %}
-              Unassigned
-              {% endif%}
+                {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
+              {% endif %}
             </p>
-            <p class="card-text">Team:
-              {% if ticket.assigned_team %}
-              <strong>{{ticket.assigned_team}}</strong>
-              {% else %}
-              Unassigned
-              {% endif%}
-            </p>
+            <hr>
+            <h4 class="card-title mb-4">{{ ticket.title }}</h4>
+            <div class="card-text">{{ ticket.description | safe }}</div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-header">
-            Actions
-          </div>
-          <div class="card-body d-flex flex-row justify-content-end gap-1">
-            <a href="{% url 'ticket_update' ticket.pk %}" class="btn btn-primary">Edit</a>
-            {% if request.user.role != 'staff' %}
-            <!-- 
-              Modal trigger
-              CREDIT: Adapted from Bootstrap Documentation
-              https://getbootstrap.com/docs/5.0/components/modal/
-            -->
-            <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal-{{ ticket.id }}">
-              Delete
-            </a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Ticket Information End -->
-
-    <!-- Ticket Body and Comments Container -->
-    <div class="d-flex flex-column ticket-detail-body-container text-break">
-
-      <!-- Ticket Body -->
-      <div class="card">
-        <div class="card-header">
-          Request
-        </div>
-        <div class="card-body">
-          <p class="card-text">Raised by: {{ ticket.author }}</p>
-          <p class="card-text">Created on: {{ ticket.created_on|date:"dS F, Y" }} at {{ ticket.created_on|date:"H:i" }}</p>
-          <p class="card-text">
-            Last update:
-            {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
-            -
+          <div class="card-footer">
+            <span>
+              <i class="fas fa-paperclip"></i>
+              <!-- if the ticket has an attachment, display a link, otherwise display 'None' -->
+              {% if ticket.ticket_image %}
+              <a href="{{ ticket.ticket_image.url }}" target="_blank"  aria-label="attachments">Link (opens in a new window)</a>
             {% else %}
-            {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
+              None
             {% endif %}
-          </p>
-          <hr>
-          <h4 class="card-title mb-4">{{ ticket.title }}</h4>
-          <p class="card-text">{{ ticket.description | safe }}</p>
+            </span>
+          </div>
         </div>
-
-        <div class="card-footer">
-          Attachments:
-          {% if ticket.ticket_image %}
-          <a href="{{ ticket.ticket_image.url }}" target="_blank">Link (opens in a new window)</a>
-          {% else %}
-          None
-          {% endif %}
-        </div>
-      </div>
-      <!-- Ticket Body End -->
-
-      <!-- Comments -->
-      <div class="card comments">
-        <div class="card-header">
-          Comments
-        </div>
-        <div class="card-body">
-          {% if not ticket.notes.all %}
-          No notes yet...
-          {% else %}
-          {% for note in ticket.notes.all %}
-          <strong>
-            {% if note.author.username %}
-            {{ note.author.username }}
+        <!-- Ticket Body End -->
+        <!-- Comments -->
+        <div class="card comments">
+          <div class="card-header text-center">
+            Comments
+          </div>
+          <div class="card-body">
+            <!-- if a ticket has no comments, inform the user otherwise display the comment with select information -->
+            {% if not ticket.notes.all %}
+              No comments yet...
             {% else %}
-            Unregistered
-            {% endif %}
-          </strong>
-          - {{ note.created_on|date:"M d, Y" }} at {{ note.created_on|date:"H:i" }}
-          <br><br>
-          {{ note.body | safe }}
-          <hr>
-          {% endfor %}
-          {% endif%}
+              {% for note in ticket.notes.all %}
+                <b>
+                  {% if note.author.username %}
+                    {{ note.author.username }}
+                  {% else %}
+                    Unregistered
+                  {% endif %}
+                </b>
+                - {{ note.created_on|date:"M d, Y" }} at {{ note.created_on|date:"H:i" }}
+                <br><br>
+                <!-- comment body set to safe to render html entered in the summernote WYSIWYG editor -->
+                {{ note.body | safe }}
+                <hr>
+              {% endfor %}
+            {% endif%}
+          </div>
         </div>
-      </div>
-      <form style="height: 500px" action="" method="POST">
-
-        {% csrf_token %}
-        {{ form | crispy }}
-
-        <div class="d-flex flex-row justify-content-end gap-1">
-          <input class="btn btn-primary" type="submit" value="Submit Note">
-        </div>
-      </form>
-      <!-- Comments End -->
-
-    </div>
-    <!-- Ticket Body and Comments Container End -->
-
-  </div>
-</div>
-
-<!-- 
-  Modal
-  CREDIT: Adapted from Bootstrap Documentation
-  https://getbootstrap.com/docs/5.0/components/modal/
--->
-<div class="modal fade" id="modal-{{ ticket.id }}" tabindex="-1" aria-labelledby="deleteModalLabel"
-  aria-describedby="model-desc" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Confirm deletion of request {{ ticket.pk }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p id="model-desc">Are you sure want to delete the request number '<strong>{{ ticket.pk }}</strong>'?</p>
-        <p>This action cannot be undone.</p>
-      </div>
-      <div class="modal-footer">
-        <form action="{% url 'ticket_delete' ticket.pk %}" method="post">
+          <!-- 
+            form used to leave comments rendered with django-crispy-forms
+            using the bootstrap 5 template pack
+          -->
+        <form method="POST">
           {% csrf_token %}
-          <button class="btn btn-danger">Delete</button>
+          {{ form | crispy }}
+          <div class="d-flex flex-row justify-content-end gap-1">
+            <input class="btn btn-primary" type="submit" value="Submit Note">
+          </div>
         </form>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- Comments End -->
+      </div>
+      <!-- Ticket Body and Comments Container End -->
+    </div>
+  </div>
+  <!-- 
+    Modal used for ticket deletion confirmation
+    CREDIT: Adapted from Bootstrap Documentation
+    https://getbootstrap.com/docs/5.0/components/modal/
+  -->
+  <div class="modal fade" id="modal-{{ ticket.id }}" tabindex="-1" aria-labelledby="deleteTicketModalLabel"
+    aria-describedby="model-desc" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteTicketModalLabel">Confirm deletion of request {{ ticket.pk }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="model-desc">Are you sure want to delete the request number '<b>{{ ticket.pk }}</b>'?</p>
+          <p>This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+          <form action="{% url 'ticket_delete' ticket.pk %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">Delete</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 {% endblock %}

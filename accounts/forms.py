@@ -49,6 +49,9 @@ class ProfileUpdateForm(forms.ModelForm):
 class AdminProfileUpdateForm(ProfileUpdateForm):
     def __init__(self, *args, **kwargs):
         super(AdminProfileUpdateForm, self).__init__(*args, **kwargs)
+        self.fields["first_name"].disabled = True
+        self.fields["last_name"].disabled = True
+        self.fields["username"].disabled = True
 
     class Meta(ProfileUpdateForm):
         model = CustomUser
