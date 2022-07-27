@@ -1,11 +1,99 @@
-/* Custom Style Sheet */
+/* ---- Custom Style Sheet ---- */
 
-body {
-  /* Fixed nav padding */
-  padding-top: 56px;
+/* Google fonts import - Cabin and Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Cabin&family=Poppins:wght@500&display=swap');
+
+/* Variables to by used throughout the style sheet */
+:root {
+  --main-bg-color: hsl(24, 26%, 96%);
+  --form-bg-color: hsl(0, 0%, 100%);
 }
 
-/* Ticket Create and Update View Template Styles */
+body {
+  /* Padding top to prevent overlap with fixed navigation bar */
+  padding-top: 56px;
+  background-color: var(--main-bg-color);
+}
+
+/* -- Font families and font sizing -- */
+
+h1,
+h2,
+h3,
+.navbar-brand {
+  font-family: 'Poppins', sans-serif;
+}
+
+p,
+span,
+.card-header {
+  font-family: 'Cabin', sans-serif;
+  font-size: 1.1em;
+}
+
+/* -- Shared Styles -- */
+
+/* Used to set alternating background on index page sections */
+.index-alt-section {
+  background-color: var(--main-bg-color);
+}
+
+label,
+.card-header {
+  font-weight: bold;
+}
+
+.max-w-600 {
+  max-width: 600px;
+}
+
+.max-w-1000 {
+  max-width: 1000px;
+}
+
+/* -- Navigation bar -- */
+
+.navbar {
+  background-color: var(--main-bg-color) !important;
+}
+
+.nav-link {
+  color: hsl(0, 0%, 0%) !important;
+}
+
+.nav-link:hover,
+.active {
+  text-decoration: underline;
+}
+
+.active {
+  text-decoration: underline;
+}
+
+/* -- Forms -- */
+
+.invalid-feedback,
+.login,
+.textinput {
+  width: 330px;
+}
+
+.alert ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.form-text {
+  display: block;
+}
+
+.asteriskField {
+  color: red;
+}
+
+/* -- Ticket Create and Update View Template Styles -- */
 
 form>* {
   margin: 10px 0 10px 0
@@ -15,23 +103,15 @@ form>div>label {
   margin-bottom: 3px;
 }
 
-/* Ticket Detail View Template Styles */
+/* Background colors for custom forms */
+.form-container-bg-color {
+  background-color: var(--form-bg-color);
+}
+
+/* -- Ticket Detail View Template Styles -- */
 
 .ticket-detail-container {
-  display: flex;
-  flex-direction: column;
   max-width: 600px;
-  gap: 10px;
-}
-
-.ticket-detail-info {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 10px
-}
-
-.ticket-detail-body-container {
-  gap: 30px
 }
 
 .comments hr:last-of-type {
@@ -42,15 +122,7 @@ form>div>label {
   z-index: 100;
 }
 
-/* Shared Classes */
-
-.max-w-600 {
-  max-width: 600px;
-}
-
-.max-w-1000 {
-  max-width: 1000px;
-}
+/* -- Ticket Status Information -- */
 
 .ticket-status {
   display: inline;
@@ -75,17 +147,11 @@ form>div>label {
   background-color: black;
 }
 
-/* Media Queries */
+/* Media Queries for Ticket Detail View */
 
-@media screen and (min-width: 1080px) {
-
-  /* Ticket Detail View Template Styles */
-
+@media screen and (min-width: 992px) {
   .ticket-detail-container {
-    display: flex;
-    flex-direction: row-reverse;
     max-width: 1000px;
-    gap: 20px;
   }
 
   .ticket-detail-info-container {
@@ -93,16 +159,8 @@ form>div>label {
     height: min-content;
   }
 
-  .ticket-detail-info {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-
   .ticket-detail-body-container {
-    gap: 30px;
     flex-basis: 75%;
     max-width: 75%;
   }
-
 }
