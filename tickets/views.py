@@ -90,13 +90,13 @@ class TicketCreateView(
         # Get the ticket model objet
         ticket_obj = form.save(commit=False)
 
-        # If the user has staff role, this forces the author to be set as
-        # themselves whereas elevated staff can set another user as the author
+        # If the user has customer role, this forces the author to be set as
+        # themselves whereas elevated users can set another user as the author
         #
         # Add data to form when using CreateView
         # CREDIT: Piyush Maurya - Stack Overflow
         # URL: https://stackoverflow.com/a/45221181
-        if self.request.user.role == "staff":
+        if self.request.user.role == "customer":
             form.instance.author = self.request.user
 
         # If the ticket object contains an image, try to save the form by
@@ -294,7 +294,7 @@ class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
     # button is accidentally made visible during design changes.
     def delete(self, request, *args, **kwargs):
         logged_in_user = self.request.user
-        if logged_in_user.role == "staff":
+        if logged_in_user.role == "customer":
             # Redirect user back to ticket detail url with message
             messages.error(
                 request,

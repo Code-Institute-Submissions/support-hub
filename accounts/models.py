@@ -13,13 +13,13 @@ class CustomUser(AbstractUser):
     ROLES = Choices(
         ("administrator", ("Administrator")),
         ("technician", ("Technician")),
-        ("staff", ("Staff")),
+        ("customer", ("Customer")),
     )
 
     role = models.CharField(
         max_length=13,
         choices=ROLES,
-        default=ROLES.staff,
+        default=ROLES.customer,
     )
     team = models.ForeignKey(
         Team,
