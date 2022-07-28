@@ -91,7 +91,7 @@ class Ticket(models.Model):
     )
     assigned_technician = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         related_name="assigned_technician",
         blank=True,
         null=True,
