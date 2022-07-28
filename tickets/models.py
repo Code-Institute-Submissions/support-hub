@@ -79,7 +79,7 @@ class Ticket(models.Model):
         TicketCategory,
         on_delete=models.SET_NULL,
         related_name="ticket_category",
-        blank=True,
+        blank=False,
         null=True,
     )
     assigned_team = models.ForeignKey(
