@@ -6,7 +6,7 @@ from .models import Ticket
 # URL:    https://www.youtube.com/watch?v=nle3u6Ww6Xk
 
 
-class StaffTicketFilter(django_filters.FilterSet):
+class CustomerTicketFilter(django_filters.FilterSet):
 
     STATUS_FILTERING_CHOICES = (
         ("open", "All Open Requests"),
@@ -14,7 +14,7 @@ class StaffTicketFilter(django_filters.FilterSet):
     )
 
     DATE_ORDERING_CHOICES = (
-        ("descending_created_on", "Creation Date- Descending"),
+        ("descending_created_on", "Creation Date - Descending"),
         ("ascending_created_on", "Creation Date - Ascending"),
         ("descending_updated_on", "Updated Date - Descending"),
         ("ascending_updated_on", "Updated Date - Ascending"),
@@ -66,13 +66,13 @@ class StaffTicketFilter(django_filters.FilterSet):
         )
 
 
-class ElevatedUserTicketFilter(StaffTicketFilter, django_filters.FilterSet):
+class ElevatedUserTicketFilter(CustomerTicketFilter, django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
         # CREDIT: TS Jee and nishant - Stack Overflow
         # REASON: Pass request.user from ListView
         # URL: https://stackoverflow.com/questions/54069084/passing-request-user-to-a-queryset-in-modelchoicefilter
         self.user = kwargs.pop("user")
-        super(StaffTicketFilter, self).__init__(*args, **kwargs)
+        super(CustomerTicketFilter, self).__init__(*args, **kwargs)
 
     ASSIGNEE_CHOICES = (("me", "Me"), ("all", "All"))
 
@@ -108,7 +108,7 @@ class ElevatedUserTicketFilter(StaffTicketFilter, django_filters.FilterSet):
         model = Ticket
         fields = (
             ("filter_by_assignee",)
-            + StaffTicketFilter.Meta.fields
+            + CustomerTicketFilter.Meta.fields
             + (
                 "author__username",
                 "assigned_technician__username",

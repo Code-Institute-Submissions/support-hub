@@ -10,10 +10,10 @@ from django.core.mail import send_mail
 from smtplib import SMTPException
 from django.conf import settings
 from .models import Ticket, Note
-from .filters import StaffTicketFilter, ElevatedUserTicketFilter
+from .filters import CustomerTicketFilter, ElevatedUserTicketFilter
 from .forms import (
-    StaffTicketCreationForm,
-    StaffTicketUpdateForm,
+    CustomerTicketCreationForm,
+    CustomerTicketUpdateForm,
     ElevatedUserTicketForm,
     NoteForm,
 )
@@ -55,7 +55,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
                 queryset=self.get_queryset(),
             )
         else:
-            context["filter"] = StaffTicketFilter(
+            context["filter"] = CustomerTicketFilter(
                 self.request.GET, queryset=self.get_queryset()
             )
         return context
@@ -76,7 +76,7 @@ class TicketCreateView(
         ):
             form = ElevatedUserTicketForm
         else:
-            form = StaffTicketCreationForm
+            form = CustomerTicketCreationForm
         return form
 
     # Populate the author form field when form used in view is loaded
@@ -238,7 +238,7 @@ class TicketUpdateView(
         ):
             form = ElevatedUserTicketForm
         else:
-            form = StaffTicketUpdateForm
+            form = CustomerTicketUpdateForm
         return form
 
     def form_valid(self, form):

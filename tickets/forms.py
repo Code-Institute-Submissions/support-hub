@@ -5,11 +5,11 @@ from crispy_forms.helper import FormHelper
 from accounts.models import CustomUser
 
 
-# Ticket Update Form for Staff
+# Ticket Update Form for Customer
 #
 # This Form provides the least amount of fields from the ticket model and form
 # the base all other ticket forms will inherit from
-class StaffTicketUpdateForm(forms.ModelForm):
+class CustomerTicketUpdateForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = (
@@ -23,17 +23,17 @@ class StaffTicketUpdateForm(forms.ModelForm):
         }
 
 
-# Ticket Creation Form for Staff
+# Ticket Creation Form for Customer
 #
-# This Form inherits from the Staff Ticket Update Form, adding additional
+# This Form inherits from the Customer Ticket Update Form, adding additional
 # fields and altering the order they are displayed
-class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
+class CustomerTicketCreationForm(CustomerTicketUpdateForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(StaffTicketCreationForm, self).__init__(*args, **kwargs)
+        super(CustomerTicketCreationForm, self).__init__(*args, **kwargs)
 
-    class Meta(StaffTicketUpdateForm):
+    class Meta(CustomerTicketUpdateForm):
         model = Ticket
-        fields = StaffTicketUpdateForm.Meta.fields + (
+        fields = CustomerTicketUpdateForm.Meta.fields + (
             "type",
             "title",
         )
@@ -46,24 +46,24 @@ class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
         "type",
         "category",
         "title",
-        StaffTicketUpdateForm.Meta.fields,
+        CustomerTicketUpdateForm.Meta.fields,
     ]
 
 
 # Ticket Creation and Update Form for Users with Elevated Role
 #
-# This Form inherits from the Staff Ticket Creation Form, adding additional
+# This Form inherits from the Customer Ticket Creation Form, adding additional
 # fields and altering the order they are displayed
-class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
+class ElevatedUserTicketForm(CustomerTicketCreationForm, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ElevatedUserTicketForm, self).__init__(*args, **kwargs)
         self.fields[
             "assigned_technician"
         ].queryset = CustomUser.objects.filter(role="technician")
 
-    class Meta(StaffTicketCreationForm):
+    class Meta(CustomerTicketCreationForm):
         model = Ticket
-        fields = StaffTicketCreationForm.Meta.fields + (
+        fields = CustomerTicketCreationForm.Meta.fields + (
             "author",
             "status",
             "priority",
@@ -81,7 +81,7 @@ class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
         "priority",
         "assigned_team",
         "assigned_technician",
-    ] + StaffTicketCreationForm.field_order
+    ] + CustomerTicketCreationForm.field_order
 
 
 # Note Form for use in Ticket View
