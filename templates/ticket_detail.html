@@ -110,21 +110,21 @@
           </div>
           <div class="card-body">
             <!-- if a ticket has no comments, inform the user otherwise display the comment with select information -->
-            {% if not ticket.notes.all %}
+            {% if not ticket.comments.all %}
               No comments yet...
             {% else %}
-              {% for note in ticket.notes.all %}
+              {% for comment in ticket.comments.all %}
                 <b>
-                  {% if note.author.username %}
-                    {{ note.author.username }}
+                  {% if comment.author.username %}
+                    {{ comment.author.username }}
                   {% else %}
                     Unregistered
                   {% endif %}
                 </b>
-                - {{ note.created_on|date:"M d, Y" }} at {{ note.created_on|date:"H:i" }}
+                - {{ comment.created_on|date:"M d, Y" }} at {{ comment.created_on|date:"H:i" }}
                 <br><br>
                 <!-- comment body set to safe to render html entered in the summernote WYSIWYG editor -->
-                {{ note.body | safe }}
+                {{ comment.body | safe }}
                 <hr>
               {% endfor %}
             {% endif%}
@@ -138,7 +138,7 @@
           {% csrf_token %}
           {{ form | crispy }}
           <div class="d-flex flex-row justify-content-end gap-1">
-            <input class="btn btn-primary" type="submit" value="Submit Note">
+            <input class="btn btn-primary" type="submit" value="Submit Comment">
           </div>
         </form>
         <!-- Comments End -->

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Team, TicketCategory, Ticket, Note
+from .models import Team, TicketCategory, Ticket, Comment
 from django_summernote.admin import SummernoteModelAdmin
 
 
@@ -15,7 +15,7 @@ class TicketAdmin(SummernoteModelAdmin):
     summernote_fields = "description"
 
 
-class NoteAdmin(SummernoteModelAdmin):
+class CommentAdmin(SummernoteModelAdmin):
     list_display = (
         "id",
         "author",
@@ -26,6 +26,6 @@ class NoteAdmin(SummernoteModelAdmin):
 
 
 admin.site.register(Team)
-admin.site.register(Note, NoteAdmin)
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(TicketCategory)
 admin.site.register(Ticket, TicketAdmin)

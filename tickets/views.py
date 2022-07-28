@@ -9,13 +9,13 @@ from django.http import Http404
 from django.core.mail import send_mail
 from smtplib import SMTPException
 from django.conf import settings
-from .models import Ticket, Note
+from .models import Ticket, Comment
 from .filters import CustomerTicketFilter, ElevatedUserTicketFilter
 from .forms import (
     CustomerTicketCreationForm,
     CustomerTicketUpdateForm,
     ElevatedUserTicketForm,
-    NoteForm,
+    CommentForm,
 )
 
 
@@ -129,7 +129,7 @@ class TicketDetailView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = NoteForm()
+        context["form"] = CommentForm()
         return context
 
     # Test to check the currently logged on user is the author of the ticket or
@@ -148,57 +148,57 @@ class TicketDetailView(
             return False
 
 
-# Note FormView to handle form validation and post requests
+# Comment FormView to handle form validation and post requests
 # CREDIT: Adapted from Django Documentation
 # URL: https://docs.djangoproject.com/en/4.0/topics/class-based-views/mixins/#an-alternative-better-solution
-class NoteFormView(SingleObjectMixin, generic.FormView):
+class CommentFormView(SingleObjectMixin, generic.FormView):
     template_name = "ticket_detail.html"
-    form_class = NoteForm
+    form_class = CommentForm
     model = Ticket
 
     def form_valid(self, form):
         form = self.get_form()
-        note = form.save(commit=False)
-        note.ticket = self.object
-        note.author = self.request.user
-        note.save()
+        comment = form.save(commit=False)
+        comment.ticket = self.object
+        comment.author = self.request.user
+        comment.save()
 
         # Call the model function to set its updated_on field to the current
         # time
-        note.ticket.set_ticket_updated_now()
+        comment.ticket.set_ticket_updated_now()
 
-        if note.ticket.author != note.author:
+        if comment.ticket.author != comment.author:
             try:
                 send_mail(
-                    subject=f"Support Hub - {note.ticket}",
+                    subject=f"Support Hub - {comment.ticket}",
                     message=(
                         "Your Ticket has an update!\n\n"
-                        f"Update posted by '{note.author}':\n"
-                        f"'{note.body_without_tags}'\n\n"
-                        f"Current ticket status is '{note.ticket.status}'\n"
+                        f"Update posted by '{comment.author}':\n"
+                        f"'{comment.body_without_tags}'\n\n"
+                        f"Current ticket status is '{comment.ticket.status}'\n"
                         "Use this link to view this ticket in Support Hub "
-                        f"'http://127.0.0.1:8000{note.ticket.get_absolute_url()}'"
+                        f"'http://127.0.0.1:8000{comment.ticket.get_absolute_url()}'"
                     ),
                     html_message=(
                         "<h2>Your Ticket has an update!</h2>"
-                        f"<p>Update posted by '{note.author}':</p>"
-                        f"<p>'{note.body_without_tags}'</p>"
+                        f"<p>Update posted by '{comment.author}':</p>"
+                        f"<p>'{comment.body_without_tags}'</p>"
                         "<br>"
-                        f"<p>Current ticket status is '{note.ticket.status}'</p>"
+                        f"<p>Current ticket status is '{comment.ticket.status}'</p>"
                         "<p>Click the link to view this ticket in Support Hub "
-                        f"<a href='{self.request.META['HTTP_HOST']}{note.ticket.get_absolute_url()}'>Ticket Link</a></p>"
+                        f"<a href='{self.request.META['HTTP_HOST']}{comment.ticket.get_absolute_url()}'>Ticket Link</a></p>"
                     ),
                     from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[note.ticket.author.email],
+                    recipient_list=[comment.ticket.author.email],
                     fail_silently=False,
                 )
             except SMTPException as e:
                 messages.error(
                     self.request,
-                    f"Error sending email update to ticket owner - '{note.ticket.author}'{e}",
+                    f"Error sending email update to ticket owner - '{comment.ticket.author}'{e}",
                 )
 
-        return super().form_valid(note)
+        return super().form_valid(comment)
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -217,7 +217,7 @@ class TicketView(View):
         return view(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        view = NoteFormView.as_view()
+        view = CommentFormView.as_view()
         return view(request, *args, **kwargs)
 
 

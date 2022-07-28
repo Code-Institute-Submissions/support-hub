@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ticket, Note
+from .models import Ticket, Comment
 from django_summernote.fields import SummernoteWidget
 from crispy_forms.helper import FormHelper
 from accounts.models import CustomUser
@@ -84,10 +84,10 @@ class ElevatedUserTicketForm(CustomerTicketCreationForm, forms.ModelForm):
     ] + CustomerTicketCreationForm.field_order
 
 
-# Note Form for use in Ticket View
-class NoteForm(forms.ModelForm):
+# Comment Form for use in Ticket View
+class CommentForm(forms.ModelForm):
     class Meta:
-        model = Note
+        model = Comment
         fields = ("body",)
 
         widgets = {
