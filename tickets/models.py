@@ -123,20 +123,20 @@ class Ticket(models.Model):
         self.save(update_fields=["updated_on"])
 
 
-class Note(models.Model):
+class Comment(models.Model):
     ticket = models.ForeignKey(
-        Ticket, on_delete=models.CASCADE, related_name="notes"
+        Ticket, on_delete=models.CASCADE, related_name="comments"
     )
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
-        related_name="note_author",
+        related_name="comments",
         null=True,
     )
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
 
-    # Remove HTML tags in for note body. For use in the admin panel
+    # Remove HTML tags in for comment body. For use in the admin panel
     # CREDIT: arie - Stack Overflow
     # URL: https://stackoverflow.com/a/9294835
     @property
