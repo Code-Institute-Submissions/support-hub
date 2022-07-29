@@ -1,15 +1,20 @@
+"""Forms for tickets application"""
+
+
 from django import forms
-from .models import Ticket, Comment
 from django_summernote.fields import SummernoteWidget
 from crispy_forms.helper import FormHelper
 from accounts.models import CustomUser
+from .models import Comment, Ticket
 
 
-# Ticket Update Form for Customer
-#
-# This Form provides the least amount of fields from the ticket model and form
-# the base all other ticket forms will inherit from
 class CustomerTicketUpdateForm(forms.ModelForm):
+    """Ticket Update Form used for users with the role of Customer.
+
+    Provides limited fields from the ticket model. All other ticket forms
+    inherit from this.
+    """
+
     class Meta:
         model = Ticket
         fields = (
@@ -23,11 +28,13 @@ class CustomerTicketUpdateForm(forms.ModelForm):
         }
 
 
-# Ticket Creation Form for Customer
-#
-# This Form inherits from the Customer Ticket Update Form, adding additional
-# fields and altering the order they are displayed
 class CustomerTicketCreationForm(CustomerTicketUpdateForm, forms.ModelForm):
+    """Ticket Creation Form for Customer.
+
+    Form inherits from the Customer Ticket Update Form, exposing more fields
+    from the Ticket Model.
+    """
+
     def __init__(self, *args, **kwargs):
         super(CustomerTicketCreationForm, self).__init__(*args, **kwargs)
 
@@ -50,11 +57,13 @@ class CustomerTicketCreationForm(CustomerTicketUpdateForm, forms.ModelForm):
     ]
 
 
-# Ticket Creation and Update Form for Users with Elevated Role
-#
-# This Form inherits from the Customer Ticket Creation Form, adding additional
-# fields and altering the order they are displayed
 class ElevatedUserTicketForm(CustomerTicketCreationForm, forms.ModelForm):
+    """Ticket Creation and Update Form for users with elevated roles.
+
+    Form inherits from the Customer Ticket Creation Form, exposing more fields
+    from the Ticket Model.
+    """
+
     def __init__(self, *args, **kwargs):
         super(ElevatedUserTicketForm, self).__init__(*args, **kwargs)
         self.fields[
@@ -84,8 +93,9 @@ class ElevatedUserTicketForm(CustomerTicketCreationForm, forms.ModelForm):
     ] + CustomerTicketCreationForm.field_order
 
 
-# Comment Form for use in Ticket View
 class CommentForm(forms.ModelForm):
+    """Ticket Comment Form for all users."""
+
     class Meta:
         model = Comment
         fields = ("body",)

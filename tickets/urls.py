@@ -1,3 +1,6 @@
+"""URLs for tickets application"""
+
+
 from django.urls import path
 from .views import (
     TicketListView,

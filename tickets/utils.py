@@ -1,9 +1,12 @@
+"""Custom utiliy functions for tickets application"""
+
+
 def is_user_elevated_role(user):
     """
     Return boolean value based on user objects role attribute
 
     Args:
-        user (SimpleLazyObject): Lazy loaded 'request.user' Object
+        user (SimpleLazyObject): Lazy loaded user object
 
     Returns:
         bool: Result of conditional statement

@@ -1,31 +1,45 @@
-from django.db import models
+"""Models for tickets application"""
+
+
+import datetime as dt
 from django.conf import settings
+from django.db import models
 from django.urls import reverse
 from django.utils.html import strip_tags
-from model_utils import Choices
-from datetime import datetime, timezone
 from cloudinary.models import CloudinaryField
-from .validators import validate_image, textfield_not_empty
+from model_utils import Choices
 
-# Model to represent the Team tickets and users can be assigned
+from .validators import textfield_not_empty, validate_image
+
+
 class Team(models.Model):
+    """Team model.
+
+    Tickets objects can be set with one team to convey information about
+    who is working on the request. Used when filtering tickets.
+    """
+
     name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.name
 
 
-# Model to represent Categories that can be assigned to tickets to help
-# sort them
 class TicketCategory(models.Model):
+    """Ticket Category model.
+
+    Tickets objects can be set with one category to convey information about
+    the request. Used when filtering tickets.
+    """
+
     name = models.CharField(max_length=30, unique=True)
 
     def __str__(self):
         return self.name
 
 
-# Model to represent Support Tickets that can be raised by users
 class Ticket(models.Model):
+    """Ticket model - Represent Support Tickets that can be raised by users"""
 
     STATUS = Choices(
         ("open", ("Open")),
@@ -56,7 +70,9 @@ class Ticket(models.Model):
         "image",
         validators=[validate_image],
         blank=True,
-        help_text="Only 'jpg' or 'png' files permitted. Maximum file size is 3MB.",
+        help_text=(
+            "Only 'jpg' or 'png' files permitted. Maximum file size is 3MB."
+        ),
     )
     status = models.CharField(
         max_length=10,
@@ -98,6 +114,7 @@ class Ticket(models.Model):
     )
 
     class Meta:
+        # Ordering configured to show the most recently updated tickets first
         ordering = ("-updated_on",)
 
     def __str__(self):
@@ -110,20 +127,26 @@ class Ticket(models.Model):
     def get_absolute_url(self):
         return reverse("ticket_detail", kwargs={"pk": self.pk})
 
-    # Property of the ticket model to be used in the template and to set the
-    # tickets updated time
     @property
     def get_time_now(self):
-        return datetime.now(timezone.utc)
+        """Gets the current time (UTC timezone aware).
 
-    # Function to set the tickets updated_on field to the current time when
-    # called
+        Returns:
+            datetime.datetime: Current time with timezone information (UTC)
+        """
+        return dt.datetime.now(dt.timezone.utc)
+
     def set_ticket_updated_now(self):
+        """
+        Sets the ticket model 'updated_on' field to the current time (UTC).
+        """
         self.updated_on = self.get_time_now
         self.save(update_fields=["updated_on"])
 
 
 class Comment(models.Model):
+    """Comment Model."""
+
     ticket = models.ForeignKey(
         Ticket, on_delete=models.CASCADE, related_name="comments"
     )
@@ -141,4 +164,10 @@ class Comment(models.Model):
     # URL: https://stackoverflow.com/a/9294835
     @property
     def body_without_tags(self):
+        """Strips all HTML tags from the comment body (used to improve
+        readability in the admin site).
+
+        Returns:
+            str: Comment body striped of all HTML tags
+        """
         return strip_tags(self.body)
