@@ -11,6 +11,7 @@ from smtplib import SMTPException
 from django.conf import settings
 from .models import Ticket, Comment
 from .filters import CustomerTicketFilter, ElevatedUserTicketFilter
+from common.utils import is_slug_a_number
 from .utils import is_user_elevated_role
 from .forms import (
     CustomerTicketCreationForm,
@@ -121,6 +122,12 @@ class TicketDetailView(
     template_name = "ticket_detail.html"
     model = Ticket
 
+    def dispatch(self, request, *args, **kwargs):
+        if is_slug_a_number(request, kwargs["pk"]):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("home")
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = CommentForm()
@@ -222,6 +229,12 @@ class TicketUpdateView(
     queryset = Ticket.objects.all()
     template_name = "ticket_update.html"
     success_message = "Ticket updated successfully."
+
+    def dispatch(self, request, *args, **kwargs):
+        if is_slug_a_number(request, kwargs["pk"]):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("home")
 
     # Present different forms base on user roles
     def get_form_class(self):

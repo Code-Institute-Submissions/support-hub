@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from .models import CustomUser
 from .forms import ProfileUpdateForm, AdminProfileUpdateForm
+from common.utils import is_slug_a_number
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -16,6 +17,12 @@ class ProfileDetailView(
     model = CustomUser
     template_name = "profile_detail.html"
     context_object_name = "profile_user"
+
+    def dispatch(self, request, *args, **kwargs):
+        if is_slug_a_number(request, kwargs["pk"]):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("home")
 
     # Test function to ensure the logged in user can only see their own
     # profile, unless their role is administrator in which case they can see
@@ -43,6 +50,12 @@ class ProfileUpdateView(
     template_name = "profile_update.html"
     form_class = ProfileUpdateForm
     success_message = "Profile Changes Saved!"
+
+    def dispatch(self, request, *args, **kwargs):
+        if is_slug_a_number(request, kwargs["pk"]):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("home")
 
     # Method to return the user whose profile is being viewed, used when
     # cancelling the form to updated the profile
