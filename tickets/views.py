@@ -11,6 +11,7 @@ from smtplib import SMTPException
 from django.conf import settings
 from .models import Ticket, Comment
 from .filters import CustomerTicketFilter, ElevatedUserTicketFilter
+from .utils import is_user_elevated_role
 from .forms import (
     CustomerTicketCreationForm,
     CustomerTicketUpdateForm,
@@ -29,10 +30,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
     # This allows elevated users to see all requests where non-elevated users
     # see only tickets they have authored
     def get_queryset(self):
-        self.request.user
-        if (self.request.user.role == "administrator") or (
-            self.request.user.role == "technician"
-        ):
+        if is_user_elevated_role(self.request.user):
             queryset = Ticket.objects.all()
         else:
             queryset = Ticket.objects.filter(author=self.request.user)
@@ -46,9 +44,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Present different filter based on user role
-        if (self.request.user.role == "administrator") or (
-            self.request.user.role == "technician"
-        ):
+        if is_user_elevated_role(self.request.user):
             context["filter"] = ElevatedUserTicketFilter(
                 self.request.GET,
                 user=self.request.user,
@@ -71,9 +67,7 @@ class TicketCreateView(
 
     # Present different forms base on user roles
     def get_form_class(self):
-        if (self.request.user.role == "administrator") or (
-            self.request.user.role == "technician"
-        ):
+        if is_user_elevated_role(self.request.user):
             form = ElevatedUserTicketForm
         else:
             form = CustomerTicketCreationForm
@@ -138,10 +132,8 @@ class TicketDetailView(
         logged_in_user = self.request.user
         current_ticket = self.get_object()
 
-        if (
-            current_ticket.author == logged_in_user
-            or logged_in_user.role == "administrator"
-            or logged_in_user.role == "technician"
+        if current_ticket.author == logged_in_user or is_user_elevated_role(
+            logged_in_user
         ):
             return True
         else:
@@ -233,9 +225,7 @@ class TicketUpdateView(
 
     # Present different forms base on user roles
     def get_form_class(self):
-        if (self.request.user.role == "administrator") or (
-            self.request.user.role == "technician"
-        ):
+        if is_user_elevated_role(self.request.user):
             form = ElevatedUserTicketForm
         else:
             form = CustomerTicketUpdateForm
@@ -269,10 +259,8 @@ class TicketUpdateView(
         logged_in_user = self.request.user
         current_ticket = self.get_object()
 
-        if (
-            current_ticket.author == logged_in_user
-            or logged_in_user.role == "administrator"
-            or logged_in_user.role == "technician"
+        if current_ticket.author == logged_in_user or is_user_elevated_role(
+            logged_in_user
         ):
             return True
         else:
@@ -294,7 +282,7 @@ class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
     # button is accidentally made visible during design changes.
     def delete(self, request, *args, **kwargs):
         logged_in_user = self.request.user
-        if logged_in_user.role == "customer":
+        if not is_user_elevated_role(logged_in_user):
             # Redirect user back to ticket detail url with message
             messages.error(
                 request,
