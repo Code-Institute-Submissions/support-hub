@@ -20,7 +20,7 @@ from .forms import (
     CustomerTicketUpdateForm,
     ElevatedUserTicketForm,
 )
-from .models import Comment, Ticket
+from .models import Ticket
 from .utils import is_user_elevated_role
 
 
