@@ -6,4 +6,5 @@ class TicketsConfig(AppConfig):
     name = "tickets"
 
     def ready(self):
-        import tickets.signals
+        """Register signals."""
+        import tickets.signals  # noqa

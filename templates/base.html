@@ -22,6 +22,8 @@
   <!-- load my style sheet and javascript files from static -->
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   <script src="{% static 'js/script.js' %}"></script>
+  <!-- favicon -->
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
   <!-- page title block used by other pages to set the title element -->
   <title>Support Hub - {% block title %}{% endblock %}</title>
 </head>
@@ -55,7 +57,7 @@
               otherwise they will see links to the home page, and to register/signup
             -->
           <a class="nav-item nav-link {% if url_name == 'ticket_list' %}active{% endif %}"
-            href="{% url 'ticket_list' %}">View Requests</a>
+            href="{% url 'ticket_list' %}">Requests</a>
           <a class="nav-item nav-link {% if url_name == 'ticket_create' %}active{% endif %}"
             href="{% url 'ticket_create' %}">Submit a request</a>
           <!-- the navigation items in this div are hidden at the bootstrap large breakpoint -->
@@ -159,8 +161,9 @@
   <!-- Footer Start -->
   <!-- CREDIT: Adapted from Bootstrap Examples
     https://getbootstrap.com/docs/5.1/examples/footers/ -->
-  <footer class="mt-auto d-flex flex-wrap justify-content-between align-items-center py-3 border-top bg-white">
-    <div class="col-md-4 d-flex align-items-center">
+  <footer
+    class="mt-auto d-flex flex-column flex-lg-row justify-content-between align-items-center py-3 border-top bg-white">
+    <div class="col-md-4 d-flex align-items-center text-center">
       <span class="ps-4">Created for educational purposes only.</span>
     </div>
 
@@ -168,10 +171,20 @@
       <!-- display image credit if user is on the home page otherwise hide the link -->
       {% if url_name == 'home' %}<li class="ms-3"><a class="text-black"
           href="https://www.freepik.com/vectors/flat-illustration">Image Credit</a></li>{% endif %}
-      <li class="ms-3"><a class="h2 text-black" href="https://github.com/ianmeigh"><i class="fab fa-github"></i></a>
+      <li class="ms-3">
+        <a class="h2 text-black" href="https://github.com/ianmeigh" target="_blank" rel="noopener"
+          alt="Link to GitHub profile of Ian Meigh (Opens in a new window)" 
+          aria-label="Link to GitHub profile of Ian Meigh (Opens in a new window)">
+          <i class="fab fa-github"></i>
+        </a>
       </li>
-      <li class="ms-3"><a class="h2 text-black" href="https://www.linkedin.com/in/ianmeigh/"><i
-            class="fab fa-linkedin"></i></a></li>
+      <li class="ms-3">
+        <a class="h2 text-black" href="https://www.linkedin.com/in/ianmeigh/" target="_blank" rel="noopener"
+          alt="Link to LinkedIn profile of Ian Meigh (Opens in a new window)" 
+          aria-label="Link to LinkedIn profile of Ian Meigh (Opens in a new window)">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
     </ul>
   </footer>
   <!-- Footer End -->

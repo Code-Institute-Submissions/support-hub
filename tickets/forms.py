@@ -1,18 +1,24 @@
+"""Forms for tickets application"""
+
+
 from django import forms
-from .models import Ticket, Note
 from django_summernote.fields import SummernoteWidget
 from crispy_forms.helper import FormHelper
 from accounts.models import CustomUser
+from .models import Comment, Ticket
 
 
-# Ticket Update Form for Staff
-#
-# This Form provides the least amount of fields from the ticket model and form
-# the base all other ticket forms will inherit from
-class StaffTicketUpdateForm(forms.ModelForm):
+class CustomerTicketUpdateForm(forms.ModelForm):
+    """Ticket Update Form used for users with the role of Customer.
+
+    Provides limited fields from the ticket model. All other ticket forms
+    inherit from this.
+    """
+
     class Meta:
         model = Ticket
         fields = (
+            "category",
             "description",
             "ticket_image",
         )
@@ -22,19 +28,20 @@ class StaffTicketUpdateForm(forms.ModelForm):
         }
 
 
-# Ticket Creation Form for Staff
-#
-# This Form inherits from the Staff Ticket Update Form, adding additional
-# fields and altering the order they are displayed
-class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(StaffTicketCreationForm, self).__init__(*args, **kwargs)
+class CustomerTicketCreationForm(CustomerTicketUpdateForm, forms.ModelForm):
+    """Ticket Creation Form for Customer.
 
-    class Meta(StaffTicketUpdateForm):
+    Form inherits from the Customer Ticket Update Form, exposing more fields
+    from the Ticket Model.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(CustomerTicketCreationForm, self).__init__(*args, **kwargs)
+
+    class Meta(CustomerTicketUpdateForm):
         model = Ticket
-        fields = StaffTicketUpdateForm.Meta.fields + (
+        fields = CustomerTicketUpdateForm.Meta.fields + (
             "type",
-            "category",
             "title",
         )
 
@@ -46,24 +53,26 @@ class StaffTicketCreationForm(StaffTicketUpdateForm, forms.ModelForm):
         "type",
         "category",
         "title",
-        StaffTicketUpdateForm.Meta.fields,
+        CustomerTicketUpdateForm.Meta.fields,
     ]
 
 
-# Ticket Creation and Update Form for Users with Elevated Role
-#
-# This Form inherits from the Staff Ticket Creation Form, adding additional
-# fields and altering the order they are displayed
-class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
+class ElevatedUserTicketForm(CustomerTicketCreationForm, forms.ModelForm):
+    """Ticket Creation and Update Form for users with elevated roles.
+
+    Form inherits from the Customer Ticket Creation Form, exposing more fields
+    from the Ticket Model.
+    """
+
     def __init__(self, *args, **kwargs):
         super(ElevatedUserTicketForm, self).__init__(*args, **kwargs)
         self.fields[
             "assigned_technician"
         ].queryset = CustomUser.objects.filter(role="technician")
 
-    class Meta(StaffTicketCreationForm):
+    class Meta(CustomerTicketCreationForm):
         model = Ticket
-        fields = StaffTicketCreationForm.Meta.fields + (
+        fields = CustomerTicketCreationForm.Meta.fields + (
             "author",
             "status",
             "priority",
@@ -81,13 +90,14 @@ class ElevatedUserTicketForm(StaffTicketCreationForm, forms.ModelForm):
         "priority",
         "assigned_team",
         "assigned_technician",
-    ] + StaffTicketCreationForm.field_order
+    ] + CustomerTicketCreationForm.field_order
 
 
-# Note Form for use in Ticket View
-class NoteForm(forms.ModelForm):
+class CommentForm(forms.ModelForm):
+    """Ticket Comment Form for all users."""
+
     class Meta:
-        model = Note
+        model = Comment
         fields = ("body",)
 
         widgets = {

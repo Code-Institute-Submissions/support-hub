@@ -1,3 +1,6 @@
+"""URLs for accounts application"""
+
+
 from django.urls import path
 from .views import (
     demo_home_page_view,
