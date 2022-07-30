@@ -27,22 +27,26 @@
           </form>
         </div>
       </div>
-      {% for profile_user in profile_users %}
-      <!-- 
-        for each user profile returned by the search, display select details in
-        a card element with a button to link to the profile view 
-      -->
-      <div class="card">
-        <div class="card-header text-center"><b>{{profile_user}}</b></div>
-        <div class="card-body">
-          <p><b>Full name:</b> {{profile_user.full_name}}</p>
-          <p><b>Email:</b> {{profile_user.email}}</p>
-          <div class="d-flex flex-column flex-lg-row justify-content-end">
-            <a href="{{ profile_user.get_absolute_url }}" class="btn btn-primary">View Profile</a>
+      {% if profile_users %}
+        {% for profile_user in profile_users %}
+        <!-- 
+          for each user profile returned by the search, display select details in
+          a card element with a button to link to the profile view 
+        -->
+        <div class="card">
+          <div class="card-header text-center"><b>{{profile_user}}</b></div>
+          <div class="card-body">
+            <p><b>Full name:</b> {{profile_user.full_name}}</p>
+            <p><b>Email:</b> {{profile_user.email}}</p>
+            <div class="d-flex flex-column flex-lg-row justify-content-end">
+              <a href="{{ profile_user.get_absolute_url }}" class="btn btn-primary">View Profile</a>
+            </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
+      {% else %}
+        <p class="text-center">Current search results empty.</p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
