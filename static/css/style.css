@@ -90,7 +90,7 @@ label,
 }
 
 .asteriskField {
-  color: red;
+  color: hsl(354, 73%, 39%);
 }
 
 /* -- Ticket Create and Update View Template Styles -- */
@@ -128,23 +128,24 @@ form>div>label {
   display: inline;
   padding: 3px 8px 3px 8px;
   border-radius: 5px;
-  color: white;
+  color: hsl(0, 0%, 100%);
 }
 
 .ticket-status-open {
-  background-color: red;
+  background-color: hsl(354, 73%, 39%);
 }
 
 .ticket-status-inprogress {
-  background-color: green;
+  background-color: hsl(152, 69%, 31%);
 }
 
 .ticket-status-onhold {
-  background-color: orange;
+  background-color: hsl(39, 100%, 50%);
+  color: hsl(0, 0%, 0%);
 }
 
 .ticket-status-closed {
-  background-color: black;
+  background-color: hsl(0, 0%, 0%);
 }
 
 /* Media Queries for Ticket Detail View */
