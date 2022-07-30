@@ -1,3 +1,6 @@
+"""Models for accounts application"""
+
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
@@ -5,10 +8,15 @@ from model_utils import Choices
 from tickets.models import Team
 
 
-# Create custom user model by extending AbstractUser
 # CREDIT: Adapted from Pyplane and Django Documentation
 # URL: https://www.youtube.com/watch?v=1BeZxMbSZNI
 class CustomUser(AbstractUser):
+    """Custom user model created by extending AbstractUser
+
+    User accounts have the additional fields:
+        Role - Choice between "administrator", "technician" or "customer"
+        Team - Foreign key relationship to tickets.models.Team
+    """
 
     ROLES = Choices(
         ("administrator", ("Administrator")),

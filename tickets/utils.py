@@ -1,4 +1,4 @@
-"""Custom utiliy functions for tickets application"""
+"""Custom utility functions for tickets application"""
 
 
 def is_user_elevated_role(user):

@@ -31,7 +31,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "tickets"
 
     def get_queryset(self):
-        """Get different queryset based on user role
+        """Get different queryset based on user role.
 
         User role determines the queryset that is returned. Elevated users will
         see an unfiltered list of all tickets in the database whereas
@@ -165,7 +165,7 @@ class TicketDetailView(
     template_name = "ticket_detail.html"
 
     def dispatch(self, request, *args, **kwargs):
-        """Take in the request and determine if can proceed with the slug
+        """Take in the request and determine if able to proceed with the slug
         provided.
 
         Used in this case to ensure that manually entered slugs in the URL
@@ -324,7 +324,7 @@ class TicketUpdateView(
     success_message = "Ticket updated successfully."
 
     def dispatch(self, request, *args, **kwargs):
-        """Take in the request and determine if can proceed with the slug
+        """Take in the request and determine if able to proceed with the slug
         provided.
 
         Used in this case to ensure that manually entered slugs in the URL

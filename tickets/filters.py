@@ -91,6 +91,7 @@ class ElevatedUserTicketFilter(CustomerTicketFilter, django_filters.FilterSet):
         """Remove 'user' information passed from Ticket List View"""
         # CREDIT: TS Jee and nishant - Stack Overflow
         # REASON: Pass request.user from ListView
+        # TODO: Add README Link
         # URL: See README Credits Section, Code Credit References - #1
         self.user = kwargs.pop("user")
         super(CustomerTicketFilter, self).__init__(*args, **kwargs)
@@ -124,8 +125,9 @@ class ElevatedUserTicketFilter(CustomerTicketFilter, django_filters.FilterSet):
     class Meta:
         model = Ticket
         fields = (
-            ("filter_by_assignee",) +
-            CustomerTicketFilter.Meta.fields + (
+            ("filter_by_assignee",)
+            + CustomerTicketFilter.Meta.fields
+            + (
                 "author__username",
                 "assigned_technician__username",
                 "priority",

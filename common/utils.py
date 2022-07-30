@@ -18,7 +18,6 @@ def is_slug_a_number(request, slug):
     Returns:
         bool: Result of type casting slug to int
     """
-    print(type(request), type(slug))
     try:
         int(slug)
     except ValueError:
