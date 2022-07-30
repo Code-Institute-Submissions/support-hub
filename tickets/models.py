@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 from django.utils.html import strip_tags
+from django.core.validators import MinLengthValidator
 from cloudinary.models import CloudinaryField
 from model_utils import Choices
 
@@ -64,8 +65,15 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="ticket_author",
     )
-    title = models.CharField(max_length=50, unique=False, blank=False)
-    description = models.TextField(validators=[textfield_not_empty])
+    title = models.CharField(
+        max_length=50,
+        validators=[MinLengthValidator(int(10))],
+        unique=False,
+        blank=False,
+    )
+    description = models.TextField(
+        validators=[textfield_not_empty(min_length=int(20))]
+    )
     ticket_image = CloudinaryField(
         "image",
         validators=[validate_image],
@@ -156,7 +164,7 @@ class Comment(models.Model):
         related_name="comments",
         null=True,
     )
-    body = models.TextField()
+    body = models.TextField(validators=[textfield_not_empty()])
     created_on = models.DateTimeField(auto_now_add=True)
 
     # Remove HTML tags in for comment body. For use in the admin panel

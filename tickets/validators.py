@@ -2,6 +2,7 @@
 
 
 from django.core.exceptions import ValidationError
+from django.utils.deconstruct import deconstructible
 from django.core.files.uploadedfile import (
     InMemoryUploadedFile,
     TemporaryUploadedFile,
@@ -62,12 +63,25 @@ def validate_image(image_obj):
         is_valid_image(image_obj.file)
 
 
-def textfield_not_empty(textfield):
+@deconstructible
+class textfield_not_empty(object):
     """
     Validator to ensure the ticket description TextField doesn't start with
     whitespace.
     """
-    # Strip HTML tags and replace non-breaking spaces
-    cleaned_data = strip_tags(textfield).replace("&nbsp;", " ")
-    if cleaned_data.startswith(" "):
-        raise ValidationError("Field cannot begin with whitespace.")
+
+    def __init__(self, min_length=1):
+        self.min_length = min_length
+
+    def __call__(self, textfield_body):
+        # Strip HTML tags and replace non-breaking spaces
+        cleaned_data = strip_tags(textfield_body).replace("&nbsp;", " ")
+        print(textfield_body)
+        if cleaned_data.startswith(" "):
+            raise ValidationError("Field cannot begin with whitespace.")
+        elif len(cleaned_data) < self.min_length:
+            raise ValidationError(
+                f"Field must be at least {self.min_length} "
+                "characters long, you have so far entered "
+                f"{len(cleaned_data)} / {self.min_length}."
+            )
