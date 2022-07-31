@@ -29,6 +29,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
 
     template_name = "ticket_list.html"
     context_object_name = "tickets"
+    paginate_by = 10
 
     def get_queryset(self):
         """Get different queryset based on user role.
@@ -44,7 +45,12 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
             queryset = Ticket.objects.all()
         else:
             queryset = Ticket.objects.filter(author=self.request.user)
-        return queryset
+        # Combining filter and pagination
+        # CREDIT: arash ataei solut - Stack Overflow
+        # URL: https://stackoverflow.com/a/64618901
+        return ElevatedUserTicketFilter(
+            self.request.GET, user=self.request.user, queryset=queryset
+        ).qs
 
     # CREDIT: Filtering adapted from The Dumbfounds: Django Filtering System
     #         with django-filter
@@ -72,6 +78,12 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
             context["filter"] = CustomerTicketFilter(
                 self.request.GET, queryset=self.get_queryset()
             )
+        # CREDIT: Jon - Stack Overflow
+        # URL: https://stackoverflow.com/a/59973868
+        get_copy = self.request.GET.copy()
+        if get_copy.get("page"):
+            get_copy.pop("page")
+        context["get_copy"] = get_copy
         return context
 
 
