@@ -2,6 +2,7 @@
 
 
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.views import generic
@@ -12,6 +13,20 @@ from .models import CustomUser
 
 def demo_home_page_view(request):
     """Basic home/index page - Introduction to site"""
+
+    # If the visitor fill in the contact form, let them know that no
+    # information has been saved as the site is for educational purposes
+    if request.POST:
+        messages.info(
+            request,
+            (
+                "Thank you for your interest!"
+                "<br><br>"
+                "This site is for education purposes and your email "
+                "address has not been saved."
+            ),
+        )
+
     return render(request, "index.html", {})
 
 
