@@ -20,7 +20,7 @@
         <!-- paragraph element and the call to action is dependant on user authentication status -->
         <p class="lead mb-4">As you're logged in why not submit a new request!</p>
         {% else %}
-        <p class="lead mb-4">Login or register to try our interactive demo and experience our system for yourself!</p>
+        <p class="lead mb-4">Login or register to try our interactive demo and experience support at it's finest!</p>
         {% endif %}
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
           {% if user.is_authenticated %}
@@ -43,8 +43,8 @@
               <i class="fas fa-server"></i>
             </div>
             <h2>Hosting</h2>
-            <p>We host the support portal for you with out partners so you don't have to worry about hidden costs! All
-              you have to do is configure the portal to suit your company.</p>
+            <p>We host the support portal for you with our partners so you don't have to worry about hidden costs! All
+              you have to do is configure the portal to suit your business.</p>
           </div>
           <div class="feature col">
             <div
@@ -52,7 +52,7 @@
               <i class="fas fa-code"></i>
             </div>
             <h2>Flexibility</h2>
-            <p>Got an idea for a feature to help your company, out development team is on hand to make that wish a
+            <p>Got an idea for a dream feature? Our development team is on hand to make that dream a
               reality.</p>
           </div>
           <div class="feature col">
@@ -75,12 +75,13 @@
         <div class="col-md-12">
           <div class="h-100 p-5 bg-white border rounded-3">
             <h2>Want to know more?</h2>
-            <p>Send us your email address and one of out sales representatives with get back to you ASAP to arrange a
+            <p>Send us your email address and one of our sales representatives with get back to you ASAP to arrange a
               call!</p>
-            <form class="d-flex flex-row justify-content-center gap-2">
+            <form class="d-flex flex-row justify-content-center gap-2" method="POST">
+              {% csrf_token %}
               <div>
                 <label for="email" class="visually-hidden">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Email address">
+                <input type="email" class="form-control" id="email" placeholder="Email address" required>
               </div>
               <div>
                 <button type="submit" class="btn btn-primary mb-3">Get in touch!</button>
