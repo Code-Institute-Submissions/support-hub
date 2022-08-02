@@ -20,7 +20,7 @@ def validate_image(image_obj):
     # Maximum permitted file size in MB
     maximum_file_size = 3
 
-    # CREDIT: Adapted from Brian - Stack Overflow
+    # CREDIT: PIL image opening code adapted from Brian - Stack Overflow
     # URL: https://stackoverflow.com/a/266731
     def is_valid_image(obj):
         """Return bool value or raise ValidationErrors based on result of using

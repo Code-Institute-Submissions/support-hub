@@ -33,6 +33,10 @@ span,
 
 /* -- Shared Styles -- */
 
+.summernote-editor {
+  width: 100%;
+}
+
 /* Used to set alternating background on index page sections */
 .index-alt-section {
   background-color: var(--main-bg-color);

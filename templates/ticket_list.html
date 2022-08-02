@@ -3,18 +3,13 @@
   {% block title %}Tickets{% endblock %}
   {% block content %}
   {% load crispy_forms_tags %}
-  <!--
-    if there are tickets render each and the filtering options offcanvas button,
-    otherwise inform the user there are no tickets
-  -->
-  {% if tickets %}
   <div class="container-fluid py-5 d-flex flex-row justify-content-center">
     <div class="d-flex flex-column mt-3 gap-4 w-100 max-w-1000">
       <!-- Filter Start -->
       <!--
-        CREDIT: Offcanvas element adapted from Bootstrap documentation
-        URL: https://getbootstrap.com/docs/5.2/components/offcanvas/
-      -->
+          CREDIT: Offcanvas element adapted from Bootstrap documentation
+          URL: https://getbootstrap.com/docs/5.2/components/offcanvas/
+        -->
       <div class="d-flex flex-row justify-content-end">
         <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Filter and Sort
@@ -28,9 +23,9 @@
         </div>
         <div class="offcanvas-body">
           <!-- 
-            form used to display filter options rendered with django-crispy-forms
-            using the bootstrap 5 template pack
-          -->
+              form used to display filter options rendered with django-crispy-forms
+              using the bootstrap 5 template pack
+            -->
           <form method="get">
             {{ filter.form | crispy}}
             <button class="btn btn-primary" type="submit">Search</button>
@@ -40,69 +35,84 @@
       </div>
       <!-- Filter End -->
       <!--
-        if there are tickets and the filter queryset is not empty render each
-        using a for loop, otherwise notify the user there are no that match the
-        current filter
+        if there are tickets, display them otherwise inform the user there are no tickets
       -->
-      {% if tickets and filter.qs %}
-      {% for ticket in filter.qs %}
-      <div class="card w-100">
-        <div class="card-body">
-          <div class="d-flex flex-row justify-content-between mb-2">
-            <span class="card-text fst-italic">ID: {{ticket.id}}</span>
-            <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
-          </div>
-          <h3 class="card-title mb-2"><a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></h3>
-          <div class="card-text">{{ ticket.description | safe | truncatechars_html:130 }}</div>
-          <hr>
-          <div class="d-flex flex-row justify-content-between">
-            <div>
-              <!-- display the assigned team and technician, if none are set display 'Unassigned' -->
-              <p>
-                Assigned to:
-                {% if ticket.assigned_technician %} <b>{{ticket.assigned_technician}}</b> {% else %}
-                Unassigned {% endif%}
-                {% if ticket.assigned_team %} in <b>{{ticket.assigned_team}}</b> {% else %} {% endif%}
-              </p>
-              <p class="card-text text-muted">Created on: {{ ticket.created_on|date:"dS F, Y" }} at
-                {{ ticket.created_on|date:"H:i" }}</p>
-              <!-- 
-                if the ticket has not been been updated since its creation
-                display a dash, otherwise use the 'timesince' template tag to
-                format the 'updated_on' date as the time since the current
-                datetime (retrieved using a model method)
-              -->
-              <p class="card-text text-muted">
-                Last update:
-                {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
-                -
-                {% else %}
-                {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
-                {% endif %}
-              </p>
+      {% if tickets %}
+        {% for ticket in object_list %}
+        <div class="card w-100">
+          <div class="card-body">
+            <div class="d-flex flex-row justify-content-between mb-2">
+              <span class="card-text fst-italic">ID: {{ticket.id}}</span>
+              <span class="ticket-status ticket-status-{{ ticket.status }}">{{ticket.get_status_display}}</span>
             </div>
-            <div class="d-flex flex-column justify-content-end">
-              <a class="btn btn-primary text-nowrap" href="{{ ticket.get_absolute_url }}">View Request</a>
+            <h3 class="card-title mb-2"><a href="{{ ticket.get_absolute_url }}">{{ ticket.title }}</a></h3>
+            <div class="card-text">{{ ticket.description | safe | truncatechars_html:130 }}</div>
+            <hr>
+            <div class="d-flex flex-row justify-content-between">
+              <div>
+                <!-- display the assigned team and technician, if none are set display 'Unassigned' -->
+                <p>
+                  Assigned to:
+                  {% if ticket.assigned_technician %} <b>{{ticket.assigned_technician}}</b> {% else %}
+                  Unassigned {% endif%}
+                  {% if ticket.assigned_team %} in <b>{{ticket.assigned_team}}</b> {% else %} {% endif%}
+                </p>
+                <p class="card-text text-muted">Created on: {{ ticket.created_on|date:"dS F, Y" }} at
+                  {{ ticket.created_on|date:"H:i" }}</p>
+                <!-- 
+                    if the ticket has not been been updated since its creation
+                    display a dash, otherwise use the 'timesince' template tag to
+                    format the 'updated_on' date as the time since the current
+                    datetime (retrieved using a model method)
+                  -->
+                <p class="card-text text-muted">
+                  Last update:
+                  {% if ticket.created_on|date:"d, M, Y:H:i:s:ms" == ticket.updated_on|date:"d, M, Y:H:i:s:ms" %}
+                    -
+                  {% else %}
+                    {{ ticket.updated_on | timesince:ticket.get_time_now }} ago
+                  {% endif %}
+                </p>
+              </div>
+              <div class="d-flex flex-column justify-content-end">
+                <a class="btn btn-primary text-nowrap" href="{{ ticket.get_absolute_url }}">View Request</a>
+              </div>
             </div>
           </div>
         </div>
+        {% endfor %}
+
+        <!-- 
+          CREDIT: Pagination adapted from Code Institute Django Tutorial
+          
+          Combining filter and pagination in URL
+          CREDIT: Jon - Stack Overflow
+          URL: https://stackoverflow.com/a/59973868
+        -->
+        {% if is_paginated %}
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center gap-1">
+              {% if page_obj.has_previous %}
+              <li><a href="?page={{ page_obj.previous_page_number }}&{{ get_copy.urlencode }}"
+                  class="page-link text-black">&laquo; PREV </a></li>
+              {% endif %}
+              {% if page_obj.has_next %}
+                <li>
+                  <a href="?page={{ page_obj.next_page_number }}&{{ get_copy.urlencode }}"
+                  class="page-link text-black">NEXT &raquo;</a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+      {% endif %}
+    </div>
+  </div>
+  {% else %}
+    <div class="container-fluid d-flex py-5 justify-content-center">
+      <div class="p-5 text-center">
+        <p>No tickets are logged or match the current filter criteria! Would you like to create one?</p>
+        <a class="btn btn-primary" href="{% url 'ticket_create' %}">Submit a request</a>
       </div>
-      {% endfor %}
     </div>
-  </div>
-  {% else %}
-  <div class="container-fluid d-flex py-5 justify-content-center">
-    <div class="p-5 text-center">
-      <p>No tickets match your filter criteria.</p>
-    </div>
-  </div>
-  {% endif %}
-  {% else %}
-  <div class="container-fluid d-flex py-5 justify-content-center">
-    <div class="p-5 text-center">
-      <p>No tickets logged! Would you like to create one?</p>
-      <a class="btn btn-primary" href="{% url 'ticket_create' %}">Submit a request</a>
-    </div>
-  </div>
   {% endif %}
 {% endblock %}
