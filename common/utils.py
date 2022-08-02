@@ -1,3 +1,6 @@
+"""Common Utils"""
+
+
 from django.contrib import messages
 
 
