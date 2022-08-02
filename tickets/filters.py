@@ -125,9 +125,8 @@ class ElevatedUserTicketFilter(CustomerTicketFilter, django_filters.FilterSet):
     class Meta:
         model = Ticket
         fields = (
-            ("filter_by_assignee",)
-            + CustomerTicketFilter.Meta.fields
-            + (
+            ("filter_by_assignee",) +
+            CustomerTicketFilter.Meta.fields + (
                 "author__username",
                 "assigned_technician__username",
                 "priority",

@@ -78,6 +78,7 @@ class TicketListView(LoginRequiredMixin, generic.ListView):
             context["filter"] = CustomerTicketFilter(
                 self.request.GET, queryset=self.get_queryset()
             )
+        # Combining filter and pagination in URL
         # CREDIT: Jon - Stack Overflow
         # URL: https://stackoverflow.com/a/59973868
         get_copy = self.request.GET.copy()
