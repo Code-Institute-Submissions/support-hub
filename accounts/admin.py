@@ -22,6 +22,17 @@ class CustomUserAdmin(UserAdmin):
         ("Role and Team", {"fields": ("role", "team")}),
     )
 
+    list_display = (
+        "username",
+        "id",
+        "email",
+        "full_name",
+        "is_staff",
+        "role",
+    )
+
+    ordering = "id",
+
 
 # register models with admin site so they can be managed
 admin.site.register(CustomUser, CustomUserAdmin)
