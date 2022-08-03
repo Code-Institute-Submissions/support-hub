@@ -19,7 +19,6 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Extending the django-allauth Signup Form
 # CREDIT: gjbht - GeeksforGeeks
-# TODO: Add README Link
 # URL: See README Credits Section, Code Credit References - #2
 class CustomSignupForm(SignupForm):
     """Custom SignupForm which extends the django-allauth Signup Form
