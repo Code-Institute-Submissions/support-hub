@@ -453,6 +453,45 @@ class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
             )
             return redirect("ticket_detail", pk=kwargs["pk"])
         else:
+            # Retrieve the ticket being deleted
+            ticket = Ticket.objects.get(pk=kwargs["pk"])
+            # Send an email to the author of the ticket to inform them of this
+            # activity. If there is a problem sending the email info the
+            # technician deleting the request with a message.
+            try:
+                send_mail(
+                    subject=f"Support Hub - {ticket}",
+                    message=(
+                        f"Your Ticket, '{ticket}' has been deleted.\n\n"
+                        "Please raise a ticket to report this if it "
+                        "was not expected.\n\n"
+                        "Use the link to visit Support Hub - "
+                        f"{self.request.META['HTTP_HOST']}."
+                    ),
+                    html_message=(
+                        "<h2>Your Ticket has an deleted!</h2>"
+                        f"<p>Your Ticket, '{ticket}' has been deleted.</p>"
+                        "<br>"
+                        "<p>Please raise a ticket to report this if it "
+                        "was not expected.</p>"
+                        "<br>"
+                        "<p>Click the link to visit Support Hub and "
+                        f"<a href='{self.request.META['HTTP_HOST']}'>"
+                        "raise a request</a>."
+                        "</p>"
+                    ),
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[ticket.author.email],
+                    fail_silently=False,
+                )
+            # Notify users of any errors sending the email.
+            except SMTPException as e:
+                messages.error(
+                    self.request,
+                    "Error sending email update to ticket owner - "
+                    f"'{ticket.author}'{e}",
+                )
+
             # Provide a success message and delete the object
             messages.info(
                 request,
