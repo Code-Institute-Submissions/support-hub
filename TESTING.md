@@ -184,9 +184,11 @@ All pages were tested using the [WAVE Firefox extension](https://wave.webaim.org
 Most pages of the site when tested with a desktop or mobile device view performed very well, with pages scoring above 90% for performance and accessibility, and 100% for Best Practices. 2 pages under mobile device testing dropped to 87% performance (with this number varying slightly under repeated testing).
 
 Original ticket creation page score - Mobile
+
 ![Original ticket creation page score](docs/validation/lighthouse/lighthouse-report-ticket-create-mobile.png)
 
 Original ticket list page score - Mobile
+
 ![Original ticket list page score](docs/validation/lighthouse/lighthouse-report-ticket-list-mobile.png)
 
 After investigation this issue was caused due to leaving script tags in the head element which was blocking the first paint of the page (an oversight left in place from early development work). Also the summernote iframe did not have a title, as I had altered the template to correct other problems (detailed in the [Bugs](README.md#bugs) section), I simply added a title to the iframe element manually.
@@ -198,12 +200,15 @@ Ticket creation page score (updated) - Mobile
 ![Ticket creation page mobile score](docs/validation/lighthouse/lighthouse-report-ticket-create-mobile-postfix.png)
 
 Ticket list page score (updated) - Mobile
+
 ![Ticket list page mobile score](docs/validation/lighthouse/lighthouse-report-ticket-list-mobile-postfix.png)
 
 Home page score - Desktop
+
 ![Home page desktop score](docs/validation/lighthouse/lighthouse-report-homepage-desktop.png)
 
 Home page score - Mobile
+
 ![Home page mobile score](docs/validation/lighthouse/lighthouse-report-homepage-mobile.png)
 
 Please see the [docs/validation/lighthouse/pdf](docs/validation/lighthouse/pdf) folder for summary lighthouse reports.
