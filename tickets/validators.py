@@ -76,7 +76,6 @@ class textfield_not_empty(object):
     def __call__(self, textfield_body):
         # Strip HTML tags and replace non-breaking spaces
         cleaned_data = strip_tags(textfield_body).replace("&nbsp;", " ")
-        print(textfield_body)
         if cleaned_data.startswith(" "):
             raise ValidationError("Field cannot begin with whitespace.")
         elif len(cleaned_data) < self.min_length:

@@ -1,5 +1,9 @@
 # Testing
 
+## Automated Tests
+
+Due to the time constraints of this project, partial automated testing was implemented as part of the release phase.
+
 ## Manual Tests
 
 ### Methodology
@@ -155,6 +159,7 @@ No validation error reported when using the [PEP8 Online Check Tool](http://pep8
 | accounts | [models.py](docs/validation/python/pep8online-accounts-models.png) | PASS |
 | accounts | [urls.py](docs/validation/python/pep8online-accounts-urls.png) | PASS |
 | accounts | [views.py](docs/validation/python/pep8online-accounts-views.png) | PASS |
+| accounts/tests | [test_urls.py](docs/validation/python/pep8online-accounts-test-urls.png) | PASS |
 | common | [utils.py](docs/validation/python/pep8online-common-utils.png) | PASS |
 | tickets | [admin.py](docs/validation/python/pep8online-tickets-admin.png) | PASS |
 | tickets | [apps.py](docs/validation/python/pep8online-tickets-apps.png) | PASS |
@@ -166,6 +171,11 @@ No validation error reported when using the [PEP8 Online Check Tool](http://pep8
 | tickets | [utils.py](docs/validation/python/pep8online-tickets-utils.png) | PASS |
 | tickets | [validators.py](docs/validation/python/pep8online-tickets-validators.png) | PASS |
 | tickets | [views.py](docs/validation/python/pep8online-tickets-views.png) | PASS |
+
+| tickets/tests | [test_forms.py](docs/validation/python/pep8online-tickets-test-forms.png) | PASS |
+| tickets/tests | [test_models.py](docs/validation/python/pep8online-tickets-test-models.png) | PASS |
+| tickets/tests | [test_urls.py](docs/validation/python/pep8online-tickets-test-urls.png) | PASS |
+| tickets/tests | [test_views.py](docs/validation/python/pep8online-tickets-test-views.png) | PASS |
 
 ### JavaScript
 

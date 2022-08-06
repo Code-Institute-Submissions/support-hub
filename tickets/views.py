@@ -469,7 +469,7 @@ class TicketDeleteView(LoginRequiredMixin, generic.DeleteView):
                         f"{self.request.META['HTTP_HOST']}."
                     ),
                     html_message=(
-                        "<h2>Your Ticket has an deleted!</h2>"
+                        "<h2>Your Ticket has been deleted.</h2>"
                         f"<p>Your Ticket, '{ticket}' has been deleted.</p>"
                         "<br>"
                         "<p>Please raise a ticket to report this if it "
