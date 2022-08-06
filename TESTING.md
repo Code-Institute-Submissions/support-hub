@@ -171,7 +171,6 @@ No validation error reported when using the [PEP8 Online Check Tool](http://pep8
 | tickets | [utils.py](docs/validation/python/pep8online-tickets-utils.png) | PASS |
 | tickets | [validators.py](docs/validation/python/pep8online-tickets-validators.png) | PASS |
 | tickets | [views.py](docs/validation/python/pep8online-tickets-views.png) | PASS |
-
 | tickets/tests | [test_forms.py](docs/validation/python/pep8online-tickets-test-forms.png) | PASS |
 | tickets/tests | [test_models.py](docs/validation/python/pep8online-tickets-test-models.png) | PASS |
 | tickets/tests | [test_urls.py](docs/validation/python/pep8online-tickets-test-urls.png) | PASS |
