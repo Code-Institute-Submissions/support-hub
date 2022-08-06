@@ -280,9 +280,9 @@ The original ticket list view used a list to display ticket information. When de
 
         ![Messaging - Toasts](docs/features/features-messaging.png)
 
-    - When a comment is left on a ticket by anyone other than the ticket's author, an email will be sent to that user's email address informing them.
+    - When a comment is left on a ticket by anyone other than the ticket's author, an email will be sent to that user's email address informing them. Also, When a ticket is deleted the tickets author will be notified of this action via email.
 
-        ![Messaging - Email](docs/features/features-email-update.png)
+        ![Messaging - Email](docs/features/features-messaging-email.png)
 
 ### Features Not Implemented
 
